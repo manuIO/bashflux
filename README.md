@@ -27,15 +27,11 @@ go get github.com/mainflux/mainflux-cli
 This will download the code to `$GOPATH/src/github.com/mainflux/mainflux-cli` directory,
 and then compile it and install the binary in `$GOBIN` directory.
 
-Now you can run the server:
-```bash
-$GOBIN/mainflux-cli
-```
-or just:
+Now you can run the program with:
 ```
 mainflux-cli
 ```
-if `$GOBIN` is in `$PATH`.
+if `$GOBIN` is in `$PATH` (otherwise use `$GOBIN/mainflux-cli`)
 
 ### Documentation
 Development documentation can be found on our [Mainflux GitHub Wiki](https://github.com/Mainflux/mainflux/wiki).
