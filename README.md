@@ -14,43 +14,28 @@ If not set already, please set your `GOPATH` and `GOBIN` environment variables. 
 mkdir -p ~/go
 export GOPATH=~/go
 export GOBIN=$GOPATH/bin
+# It's useful to add $GOBIN to $PATH
+ecport PATH=$PATH:$GOBIN
 ```
 
 #### Get the code
 Use [`go`](https://golang.org/cmd/go/) tool to "get" (i.e. fetch and build) `mainflux-core-server` package:
 ```bash
-go get github.com/mainflux/mainflux-core-server
+go get github.com/mainflux/mainflux-cli
 ```
 
-This will download the code to `$GOPATH/src/github.com/mainflux/mainflux-core-server` directory,
+This will download the code to `$GOPATH/src/github.com/mainflux/mainflux-cli` directory,
 and then compile it and install the binary in `$GOBIN` directory.
 
 Now you can run the server:
 ```bash
-$GOBIN/mainflux-core-server
+$GOBIN/mainflux-cli
 ```
-
-Please note that the binary `mainflux-core-server` expects to find configuration file `config.yml` in
-direcotry provided by `MAINFLUX_CORE_SERVER_CONFIG_DIR` if this variable is set. Otherwise it looks for `config.yml`
-in `$GOPATH/src/github.com/mainflux/mainflux-core-server`.
-
-Note also that using `go get` is prefered than out-of-gopath code fetch by cloning the git repo like this:
+or just:
 ```
-git clone https://github.com/Mainflux/mainflux-core-server && cd mainflux-core-server
-go get
-go build
-MAINFLUX_CORE_SERVER_CONFIG_DIR=. ./mainflux-core-server
+mainflux-cli
 ```
-### Dependencies
-Mainflux Core Server is connected to `NATS` on northbound interface, and to `MongoDB` and `InfluxDB` southbound.
-
-Following diagram illustrates the architecture:
-![Mainflux Arch](https://github.com/Mainflux/mainflux-doc/blob/master/mermaid/arch.png)
-
-This is why to run Mainflux Core Server you have to have running:
-- [NATS](https://github.com/nats-io/gnatsd)
-- [MongoDB](https://github.com/mongodb/mongo)
-- [InfluxDB](https://github.com/influxdata/influxdb)
+if `$GOBIN` is in `$PATH`.
 
 ### Documentation
 Development documentation can be found on our [Mainflux GitHub Wiki](https://github.com/Mainflux/mainflux/wiki).
