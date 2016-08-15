@@ -14,8 +14,8 @@ If not set already, please set your `GOPATH` and `GOBIN` environment variables. 
 mkdir -p ~/go
 export GOPATH=~/go
 export GOBIN=$GOPATH/bin
-# It's useful to add $GOBIN to $PATH
-ecport PATH=$PATH:$GOBIN
+# It's often useful to add $GOBIN to $PATH
+export PATH=$PATH:$GOBIN
 ```
 
 #### Get the code
