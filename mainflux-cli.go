@@ -10,7 +10,7 @@ func main() {
 	shell := ishell.New()
 
 	// display info
-	shell.Println("Sample Interactive Shell")
+	shell.Println(banner)
 
 	// handle login
 	shell.Register("login", func(args ...string) (string, error) {
@@ -55,3 +55,19 @@ func doLogin(shell *ishell.Shell) {
 	shell.Println("Your inputs were", username, "and", password+".")
 
 }
+
+var banner = `
+███╗   ███╗ █████╗ ██╗███╗   ██╗███████╗██╗     ██╗   ██╗██╗  ██╗
+████╗ ████║██╔══██╗██║████╗  ██║██╔════╝██║     ██║   ██║╚██╗██╔╝
+██╔████╔██║███████║██║██╔██╗ ██║█████╗  ██║     ██║   ██║ ╚███╔╝ 
+██║╚██╔╝██║██╔══██║██║██║╚██╗██║██╔══╝  ██║     ██║   ██║ ██╔██╗ 
+██║ ╚═╝ ██║██║  ██║██║██║ ╚████║██║     ███████╗╚██████╔╝██╔╝ ██╗
+╚═╝     ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═╝     ╚══════╝ ╚═════╝ ╚═╝  ╚═╝
+
+                == Industrial IoT System ==
+       
+                Made with <3 by Mainflux Team
+[w] http://mainflux.io
+[t] @mainflux
+
+`
