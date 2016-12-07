@@ -29,7 +29,7 @@ and then compile it and install the binary in `$GOBIN` directory.
 
 Now you can run the program with:
 ```
-mainflux-cli
+./mainflux-cli
 ```
 if `$GOBIN` is in `$PATH` (otherwise use `$GOBIN/mainflux-cli`)
 
