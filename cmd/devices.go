@@ -127,3 +127,25 @@ func DeleteDevice(id string) string {
 
 	return string(b)
 }
+
+// CreateDevice - creates new device and generates device UUID
+func PlugDevice(id string, channels string) string {
+	var err error
+
+	url := UrlHTTP + "/devices/" + id + "/plug"
+	sr := strings.NewReader(channels)
+	rsp, err := netClient.Post(url, "application/json", sr)
+	if err != nil {
+		fmt.Println(err)
+		return err.Error()
+	}
+	defer rsp.Body.Close()
+	body, err := ioutil.ReadAll(rsp.Body)
+
+	b, err := prettyJSON(body)
+	if err != nil {
+		return err.Error()
+	}
+
+	return string(b)
+}

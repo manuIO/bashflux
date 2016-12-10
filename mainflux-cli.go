@@ -37,6 +37,25 @@ func main() {
 	})
 
 	////
+	// Help
+	////
+	shell.Register("help", func(args ...string) (string, error) {
+		s := `Mainflux CLI is a command line tool for administration and provisioning of Mainflux IoT server.
+More information can be found on project's website: http://mainflux.io
+
+Commands:
+	status          Mainflux server health check
+	devices         Manipulation with devices. Do 'devices help' for info.
+	channels        Manipulation with channels. Do 'channels help' for info.
+	
+	clear           Clears the screen
+	exit            Exits the CLI
+	
+	help            Prints this help`
+		return s, nil
+	})
+
+	////
 	// Devices
 	////
 	shell.Register("devices", func(args ...string) (string, error) {
@@ -74,8 +93,22 @@ func main() {
 				break
 			}
 			break
+		case "plug":
+			if l > 2 {
+				s = cmd.PlugDevice(args[1], args[2])
+			}
+			break
+		case "help":
+			s = `Commands:
+	create                                  Creates new device and generates it's UUID
+	get                                     Gets all devices
+	get <device_id>                         Gets device by id
+	update <device_id> <JSON_string>        Updates device record
+	delete <device_id                       Removes device
+	plug <device_d> <JSON_channels_list>    Plugs device into the channel(s)`
+
 		default:
-			s = cmd.GetDevice(args[0])
+			s = "Unrecognized command"
 		}
 
 		return s, nil
@@ -99,7 +132,7 @@ func main() {
 				s = cmd.GetChannel(args[1])
 				break
 			}
-			s = cmd.GetDevices()
+			s = cmd.GetChannels()
 			break
 		case "create":
 			if l > 1 {
@@ -119,8 +152,22 @@ func main() {
 				break
 			}
 			break
+		case "plug":
+			if l > 2 {
+				s = cmd.PlugChannel(args[1], args[2])
+			}
+			break
+		case "help":
+			s = `Commands:
+	create                                  Creates new channel and generates it's UUID
+	get                                     Gets all channels
+	get <channel_id>                        Gets channel by id
+	update <channel_id> <JSON_string>       Updates channel record
+	delete <channel_id>                     Removes channel
+	plug <channel_id> <JSON_devices_list>   Plugs device(s) into the channel`
+
 		default:
-			s = cmd.GetChannel(args[0])
+			s = "Unrecognized command"
 		}
 
 		return s, nil

@@ -126,3 +126,25 @@ func DeleteChannel(id string) string {
 
 	return string(b)
 }
+
+// PlugChannel - plugs list of devices into the channel
+func PlugChannel(id string, devices string) string {
+	var err error
+
+	url := UrlHTTP + "/channels/" + id + "/plug"
+	sr := strings.NewReader(devices)
+	rsp, err := netClient.Post(url, "application/json", sr)
+	if err != nil {
+		fmt.Println(err)
+		return err.Error()
+	}
+	defer rsp.Body.Close()
+	body, err := ioutil.ReadAll(rsp.Body)
+
+	b, err := prettyJSON(body)
+	if err != nil {
+		return err.Error()
+	}
+
+	return string(b)
+}
