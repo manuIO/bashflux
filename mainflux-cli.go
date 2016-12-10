@@ -105,6 +105,12 @@ func main() {
 				s = cmd.UpdateChannel(args[1], args[2])
 			}
 			break
+		case "delete":
+			if l > 1 {
+				s = cmd.DeleteChannel(args[1])
+				break
+			}
+			break
 		default:
 			s = cmd.GetChannel(args[0])
 		}
