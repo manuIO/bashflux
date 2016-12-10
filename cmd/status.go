@@ -14,5 +14,11 @@ func Status() string {
 	}
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
-	return string(body)
+
+	b, e := prettyJSON(body)
+	if e != nil {
+		return "ERROR JSON"
+	}
+
+	return string(b)
 }
