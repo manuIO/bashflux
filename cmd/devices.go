@@ -23,7 +23,6 @@ func CreateDevice(msg string) string {
 	url := UrlHTTP + "/devices"
 	rsp, err := netClient.Post(url, "application/json", nil)
 	if err != nil {
-		fmt.Println(err)
 		return err.Error()
 	}
 	defer rsp.Body.Close()

@@ -21,30 +21,31 @@ func CreateChannel(msg string) string {
 	var err error
 
 	url := UrlHTTP + "/channels"
-	rsp, err := netClient.Post(url, "application/json", nil)
+	resp, err := netClient.Post(url, "application/json", nil)
 	if err != nil {
 		return err.Error()
 	}
-	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
+	defer resp.Body.Close()
 
-	b, err := prettyJSON(body)
-	if err != nil {
-		return err.Error()
+	s := ""
+	if resp.StatusCode == 201 {
+		s = fmt.Sprintf("Created resource %s", resp.Header.Get("Location"))
+	} else {
+		s = http.StatusText(resp.StatusCode)
 	}
 
-	return string(b)
+	return s
 }
 
 // GetChannels - gets all channels
 func GetChannels() string {
 	url := UrlHTTP + "/channels"
-	rsp, err := netClient.Get(url)
+	resp, err := netClient.Get(url)
 	if err != nil {
 		return err.Error()
 	}
-	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
 
 	b, e := prettyJSON(body)
 	if e != nil {
@@ -57,12 +58,12 @@ func GetChannels() string {
 // GetChannel - gets channel by ID
 func GetChannel(id string) string {
 	url := UrlHTTP + "/channels/" + id
-	rsp, err := netClient.Get(url)
+	resp, err := netClient.Get(url)
 	if err != nil {
 		return err.Error()
 	}
-	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
 
 	b, e := prettyJSON(body)
 	if e != nil {
@@ -87,12 +88,12 @@ func UpdateChannel(id string, msg string) string {
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Content-Length", strconv.Itoa(len(msg)))
 
-	rsp, err := netClient.Do(req)
+	resp, err := netClient.Do(req)
 	if err != nil {
 		return err.Error()
 	}
-	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
 
 	b, e := prettyJSON(body)
 	if e != nil {
@@ -111,13 +112,13 @@ func DeleteChannel(id string) string {
 	if err != nil {
 		return err.Error()
 	}
-	rsp, err := netClient.Do(req)
+	resp, err := netClient.Do(req)
 	if err != nil {
 		fmt.Println(err)
 		return err.Error()
 	}
-	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
 
 	b, err := prettyJSON(body)
 	if err != nil {
@@ -133,13 +134,13 @@ func PlugChannel(id string, devices string) string {
 
 	url := UrlHTTP + "/channels/" + id + "/plug"
 	sr := strings.NewReader(devices)
-	rsp, err := netClient.Post(url, "application/json", sr)
+	resp, err := netClient.Post(url, "application/json", sr)
 	if err != nil {
 		fmt.Println(err)
 		return err.Error()
 	}
-	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
 
 	b, err := prettyJSON(body)
 	if err != nil {
