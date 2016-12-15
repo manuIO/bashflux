@@ -40,19 +40,7 @@ func main() {
 	// Help
 	////
 	shell.Register("help", func(args ...string) (string, error) {
-		s := `Mainflux CLI is a command line tool for administration and provisioning of Mainflux IoT server.
-More information can be found on project's website: http://mainflux.io
-
-Commands:
-	status          Mainflux server health check
-	devices         Manipulation with devices. Do 'devices help' for info.
-	channels        Manipulation with channels. Do 'channels help' for info.
-	
-	clear           Clears the screen
-	exit            Exits the CLI
-	
-	help            Prints this help`
-		return s, nil
+		return cliHelp, nil
 	})
 
 	////
@@ -99,13 +87,7 @@ Commands:
 			}
 			break
 		case "help":
-			s = `Commands:
-	create                                  Creates new device and generates it's UUID
-	get                                     Gets all devices
-	get <device_id>                         Gets device by id
-	update <device_id> <JSON_string>        Updates device record
-	delete <device_id                       Removes device
-	plug <device_d> <JSON_channels_list>    Plugs device into the channel(s)`
+			s = devicesHelp
 
 		default:
 			s = "Unrecognized command"
@@ -158,13 +140,7 @@ Commands:
 			}
 			break
 		case "help":
-			s = `Commands:
-	create                                  Creates new channel and generates it's UUID
-	get                                     Gets all channels
-	get <channel_id>                        Gets channel by id
-	update <channel_id> <JSON_string>       Updates channel record
-	delete <channel_id>                     Removes channel
-	plug <channel_id> <JSON_devices_list>   Plugs device(s) into the channel`
+			s = channelsHelp
 
 		default:
 			s = "Unrecognized command"
@@ -180,15 +156,51 @@ Commands:
 var banner = `
 ███╗   ███╗ █████╗ ██╗███╗   ██╗███████╗██╗     ██╗   ██╗██╗  ██╗
 ████╗ ████║██╔══██╗██║████╗  ██║██╔════╝██║     ██║   ██║╚██╗██╔╝
-██╔████╔██║███████║██║██╔██╗ ██║█████╗  ██║     ██║   ██║ ╚███╔╝ 
-██║╚██╔╝██║██╔══██║██║██║╚██╗██║██╔══╝  ██║     ██║   ██║ ██╔██╗ 
+██╔████╔██║███████║██║██╔██╗ ██║█████╗  ██║     ██║   ██║ ╚███╔╝
+██║╚██╔╝██║██╔══██║██║██║╚██╗██║██╔══╝  ██║     ██║   ██║ ██╔██╗
 ██║ ╚═╝ ██║██║  ██║██║██║ ╚████║██║     ███████╗╚██████╔╝██╔╝ ██╗
 ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═╝     ╚══════╝ ╚═════╝ ╚═╝  ╚═╝
 
                 == Industrial IoT System ==
-       
+
                 Made with <3 by Mainflux Team
 [w] http://mainflux.io
 [t] @mainflux
 
+`
+
+var cliHelp = `
+Mainflux CLI is a command line tool for administration and provisioning of
+Mainflux IoT server. More information can be found on project's website:
+http://mainflux.io
+
+COMMANDS
+	status      Mainflux server health check
+	devices     Manipulation with devices. Do 'devices help' for info.
+	channels    Manipulation with channels. Do 'channels help' for info.
+
+	clear       Clears the screen
+	exit        Exits the CLI
+
+	help        Prints this help
+`
+
+var devicesHelp = `
+COMMANDS
+	create                                  Creates new device and generates it's UUID
+	get                                     Gets all devices
+	get <device_id>                         Gets device by id
+	update <device_id> <JSON_string>        Updates device record
+	delete <device_id                       Removes device
+	plug <device_d> <JSON_channels_list>    Plugs device into the channel(s)
+`
+
+var channelsHelp = `
+COMMANDS
+	create                                  Creates new channel and generates it's UUID
+	get                                     Gets all channels
+	get <channel_id>                        Gets channel by id
+	update <channel_id> <JSON_string>       Updates channel record
+	delete <channel_id>                     Removes channel
+	plug <channel_id> <JSON_devices_list>   Plugs device(s) into the channel
 `
