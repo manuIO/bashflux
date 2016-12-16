@@ -9,9 +9,12 @@
 package main
 
 import (
+	"encoding/json"
+
 	"github.com/abiosoft/ishell"
 	"github.com/mainflux/mainflux-cli/cmd"
 	"github.com/mainflux/mainflux-cli/config"
+	"github.com/mainflux/mainflux-core/models"
 )
 
 func main() {
@@ -76,9 +79,20 @@ func main() {
 			}
 			break
 		case "delete":
-			if l > 1 {
-				s = cmd.DeleteDevice(args[1])
+			if args[1] == "all" {
+				var devices []models.Device
+				s = cmd.GetDevices()
+				json.Unmarshal([]byte(s), &devices);
+				for i := 0; i  < len(devices); i++ {
+					s = s + cmd.DeleteDevice(devices[i].ID)
+				}
+			} else if l > 1 {
+				for i := 1; i < l; i++ {
+					s = s + cmd.DeleteDevice(args[i])
+				}
 				break
+			} else {
+				s = "usage: devices delete [all] device_id1 device_id2 ..."
 			}
 			break
 		case "plug":
@@ -129,9 +143,20 @@ func main() {
 			}
 			break
 		case "delete":
-			if l > 1 {
-				s = cmd.DeleteChannel(args[1])
+			if args[1] == "all" {
+				var channels []models.Channel
+				s = cmd.GetChannels()
+				json.Unmarshal([]byte(s), &channels);
+				for i := 0; i  < len(channels); i++ {
+					s = s + cmd.DeleteChannel(channels[i].ID)
+				}
+			} else if l > 1 {
+				for i := 1; i < l; i++ {
+					s = s + cmd.DeleteChannel(args[i])
+				}
 				break
+			} else {
+				s = "usage: channels delete [all] channel_id1 channel_id2 ..."
 			}
 			break
 		case "plug":
