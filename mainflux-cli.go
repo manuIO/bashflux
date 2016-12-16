@@ -104,7 +104,7 @@ func main() {
 			s = devicesHelp
 
 		default:
-			s = "Unrecognized command"
+			s = "Unrecognized command" + devicesHelp
 		}
 
 		return s, nil
@@ -168,7 +168,7 @@ func main() {
 			s = channelsHelp
 
 		default:
-			s = "Unrecognized command"
+			s = "Unrecognized command" + channelsHelp
 		}
 
 		return s, nil
