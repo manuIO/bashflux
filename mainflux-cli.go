@@ -59,26 +59,26 @@ func main() {
 		}
 
 		switch args[0] {
-		case "get":
+		case "get", "-g":
 			if l > 1 {
 				s = cmd.GetDevice(args[1])
 				break
 			}
 			s = cmd.GetDevices()
 			break
-		case "create":
+		case "create", "-c":
 			if l > 1 {
 				s = cmd.CreateDevice(args[1])
 			} else {
 				s = cmd.CreateDevice("")
 			}
 			break
-		case "update":
+		case "update", "-u":
 			if l > 2 {
 				s = cmd.UpdateDevice(args[1], args[2])
 			}
 			break
-		case "delete":
+		case "delete", "-d":
 			if args[1] == "all" {
 				var devices []models.Device
 				s = cmd.GetDevices()
@@ -95,7 +95,7 @@ func main() {
 				s = "usage: devices delete [all] device_id1 device_id2 ..."
 			}
 			break
-		case "plug":
+		case "plug", "-p":
 			if l > 2 {
 				s = cmd.PlugDevice(args[1], args[2])
 			}
@@ -123,26 +123,26 @@ func main() {
 		}
 
 		switch args[0] {
-		case "get":
+		case "get", "-g":
 			if l > 1 {
 				s = cmd.GetChannel(args[1])
 				break
 			}
 			s = cmd.GetChannels()
 			break
-		case "create":
+		case "create", "-c":
 			if l > 1 {
 				s = cmd.CreateChannel(args[1])
 			} else {
 				s = cmd.CreateChannel("")
 			}
 			break
-		case "update":
+		case "update", "-u":
 			if l > 2 {
 				s = cmd.UpdateChannel(args[1], args[2])
 			}
 			break
-		case "delete":
+		case "delete", "-d":
 			if args[1] == "all" {
 				var channels []models.Channel
 				s = cmd.GetChannels()
@@ -159,7 +159,7 @@ func main() {
 				s = "usage: channels delete [all] channel_id1 channel_id2 ..."
 			}
 			break
-		case "plug":
+		case "plug", "-p":
 			if l > 2 {
 				s = cmd.PlugChannel(args[1], args[2])
 			}
