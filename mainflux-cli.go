@@ -10,172 +10,251 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
+	"log"
 
-	"github.com/abiosoft/ishell"
 	"github.com/mainflux/mainflux-cli/cmd"
-	"github.com/mainflux/mainflux-cli/config"
 	"github.com/mainflux/mainflux-core/models"
+    "github.com/spf13/cobra"
 )
 
 func main() {
 
-	// Parse config
-	var cfg config.Config
-	cfg.Parse()
+	var httpHost = "0.0.0.0"
+	var httpPort = 7070
+
+	var s string
 
 	// Set HTTP server address
-	cmd.SetServerAddr(cfg.HTTPHost, cfg.HTTPPort)
+	cmd.SetServerAddr(httpHost, httpPort)
 
-	shell := ishell.New()
-
-	// display info
-	shell.Println(banner)
+	// print mainflux-cli banner
+	fmt.Println(banner)
 
 	////
 	// Status
 	////
-	shell.Register("status", func(args ...string) (string, error) {
-		s := cmd.Status()
-		return s, nil
-	})
-
-	////
-	// Help
-	////
-	shell.Register("help", func(args ...string) (string, error) {
-		return cliHelp, nil
-	})
+	var cmdStatus = &cobra.Command{
+        Use:   "status",
+        Short: "Server status",
+        Long:  `Mainflux server health checkt.`,
+        Run: func(cmdCobra *cobra.Command, args []string) {
+			s := cmd.Status()
+			fmt.Println(s)
+        },
+    }
 
 	////
 	// Devices
 	////
-	shell.Register("devices", func(args ...string) (string, error) {
-		var s string
-		l := len(args)
+	var cmdDevices = &cobra.Command{
+        Use:   "devices",
+        Short: "Manipulation with devices.",
+        Long:  `Manipulation with devices: create, delete or update devices.`,
+        Run: func(cmdCobra *cobra.Command, args []string) {
+			s := cmd.GetDevices()
+			fmt.Println(s)
+        },
+    }
 
-		if l == 0 {
-			s = cmd.GetDevices()
-			return s, nil
-		}
+	// Create Device
+	var cmdCreateDevice = &cobra.Command{
+        Use:   "create",
+        Short: "create or create <JSON_device>",
+        Long:  `Creates new device and generates it's UUID`,
+        Run: func(cmdCobra *cobra.Command, args []string) {
+				s := cmd.CreateDevice("")
+				fmt.Println(s)
+        },
+    }
 
-		switch args[0] {
-		case "get", "-g":
-			if l > 1 {
-				s = cmd.GetDevice(args[1])
-				break
-			}
-			s = cmd.GetDevices()
-			break
-		case "create", "-c":
-			if l > 1 {
-				s = cmd.CreateDevice(args[1])
-			} else {
-				s = cmd.CreateDevice("")
-			}
-			break
-		case "update", "-u":
-			if l > 2 {
-				s = cmd.UpdateDevice(args[1], args[2])
-			}
-			break
-		case "delete", "-d":
-			if args[1] == "all" {
-				var devices []models.Device
+	// Get Device
+	var cmdGetDevice = &cobra.Command{
+        Use:   "get",
+        Short: "get or get <device_id>",
+        Long:  `Gets all devices or Gets device by id`,
+        Run: func(cmdCobra *cobra.Command, args []string) {
+			l := len(args)
+			if l == 0 {
 				s = cmd.GetDevices()
-				json.Unmarshal([]byte(s), &devices);
-				for i := 0; i  < len(devices); i++ {
-					s = s + cmd.DeleteDevice(devices[i].ID)
-				}
-			} else if l > 1 {
-				for i := 1; i < l; i++ {
-					s = s + cmd.DeleteDevice(args[i])
-				}
-				break
 			} else {
-				s = "usage: devices delete [all] device_id1 device_id2 ..."
+				for i := 0; i < l; i++ {
+					s = s + cmd.GetDevice(args[i])
+				}
 			}
-			break
-		case "plug", "-p":
+			fmt.Println(s)
+        },
+    }
+
+	// Delete Device
+	var cmdDeleteDevice = &cobra.Command{
+        Use:   "delete",
+        Short: "delete all or delete <device_id>",
+        Long:  `Removes device from DB`,
+        Run: func(cmdCobra *cobra.Command, args []string) {
+			l := len(args)
+			if l != 0 {
+				if args[0] == "all" {
+					var devices []models.Device
+					s = cmd.GetDevices()
+					json.Unmarshal([]byte(s), &devices);
+					for i := 0; i  < len(devices); i++ {
+						s = s + cmd.DeleteDevice(devices[i].ID)
+					}
+				} else {
+					for i := 0; i < l; i++ {
+						s = s + cmd.DeleteDevice(args[i])
+					}
+				}
+				fmt.Println(s)
+			}
+        },
+    }
+
+	// Plug Device
+	var cmdPlugDevice = &cobra.Command{
+        Use:   "plug",
+        Short: "plug <device_d> <JSON_channels> ",
+        Long:  `Plugs device into the channel(s)`,
+        Run: func(cmdCobra *cobra.Command, args []string) {
+			l := len(args)
 			if l > 2 {
-				s = cmd.PlugDevice(args[1], args[2])
+				s = cmd.PlugDevice(args[0], args[1])
+				fmt.Println(s)
 			}
-			break
-		case "help":
-			s = devicesHelp
+        },
+    }
 
-		default:
-			s = "Unrecognized command" + devicesHelp
-		}
-
-		return s, nil
-	})
+	// Update Device
+	var cmdUpdateDevice = &cobra.Command{
+        Use:   "update",
+        Short: "update <device_id> <JSON_string>",
+        Long:  `Update device record`,
+        Run: func(cmdCobra *cobra.Command, args []string) {
+			l := len(args)
+			if l > 2 {
+				s = cmd.UpdateDevice(args[0], args[1])
+				fmt.Println(s)
+			}
+        },
+    }
 
 	////
 	// Channels
 	////
-	shell.Register("channels", func(args ...string) (string, error) {
-		var s string
-		l := len(args)
+	var cmdChannels = &cobra.Command{
+		Use:   "channels",
+		Short: "Manipulation with channels",
+		Long:  `Manipulation with channels: create, delete or update channels`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			s := cmd.GetChannels()
+			fmt.Println(s)
+		},
+	}
 
-		if l == 0 {
-			s = cmd.GetChannels()
-			return s, nil
-		}
-
-		switch args[0] {
-		case "get", "-g":
-			if l > 1 {
-				s = cmd.GetChannel(args[1])
-				break
-			}
-			s = cmd.GetChannels()
-			break
-		case "create", "-c":
-			if l > 1 {
-				s = cmd.CreateChannel(args[1])
-			} else {
+	// Create Channel
+	var cmdCreateChannel = &cobra.Command{
+        Use:   "create",
+        Short: "create or create <JSON_channel>",
+        Long:  `Creates new channel and generates it's UUID`,
+        Run: func(cmdCobra *cobra.Command, args []string) {
 				s = cmd.CreateChannel("")
-			}
-			break
-		case "update", "-u":
-			if l > 2 {
-				s = cmd.UpdateChannel(args[1], args[2])
-			}
-			break
-		case "delete", "-d":
-			if args[1] == "all" {
-				var channels []models.Channel
+				fmt.Println(s)
+        },
+    }
+
+	// Get Device
+	var cmdGetChannel = &cobra.Command{
+        Use:   "get",
+        Short: "get or get <channel_id>",
+        Long:  `Gets all channels or Gets channel by id`,
+        Run: func(cmdCobra *cobra.Command, args []string) {
+			l := len(args)
+			if l == 0 {
 				s = cmd.GetChannels()
-				json.Unmarshal([]byte(s), &channels);
-				for i := 0; i  < len(channels); i++ {
-					s = s + cmd.DeleteChannel(channels[i].ID)
-				}
-			} else if l > 1 {
-				for i := 1; i < l; i++ {
-					s = s + cmd.DeleteChannel(args[i])
-				}
-				break
 			} else {
-				s = "usage: channels delete [all] channel_id1 channel_id2 ..."
+				for i := 0; i < l; i++ {
+					s = s + cmd.GetChannel(args[i])
+				}
 			}
-			break
-		case "plug", "-p":
+			fmt.Println(s)
+        },
+    }
+
+	// Update Channel
+	var cmdUpdateChannel = &cobra.Command{
+        Use:   "update",
+        Short: "update <channel_id> <JSON_string>",
+        Long:  `Updates channel record`,
+        Run: func(cmdCobra *cobra.Command, args []string) {
+			l := len(args)
 			if l > 2 {
-				s = cmd.PlugChannel(args[1], args[2])
+				s = cmd.UpdateChannel(args[0], args[1])
+				fmt.Println(s)
 			}
-			break
-		case "help":
-			s = channelsHelp
+        },
+    }
 
-		default:
-			s = "Unrecognized command" + channelsHelp
-		}
+	// Delete Channel
+	var cmdDeleteChannel = &cobra.Command{
+        Use:   "delete",
+        Short: "delete <channel_id>",
+        Long:  `Removes channel`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			l := len(args)
+			if l != 0 {
+				if args[0] == "all" {
+					var channels []models.Device
+					s = cmd.GetChannels()
+					json.Unmarshal([]byte(s), &channels);
+					for i := 0; i  < len(channels); i++ {
+						s = s + cmd.DeleteChannel(channels[i].ID)
+					}
+				} else {
+					for i := 0; i < l; i++ {
+						s = s + cmd.DeleteChannel(args[i])
+					}
+				}
+				fmt.Println(s)
+			}
+        },
+    }
 
-		return s, nil
-	})
+	// Plug Channel
+	var cmdPlugChannel = &cobra.Command{
+        Use:   "plug",
+        Short: "plug <channel_id> <JSON_device>",
+        Long:  `Plugs device(s) into the channel`,
+        Run: func(cmdCobra *cobra.Command, args []string) {
+			l := len(args)
+			if l > 2 {
+				s = cmd.PlugChannel(args[0], args[1])
+				fmt.Println(s)
+			}
+        },
+    }
 
-	// start shell
-	shell.Start()
+    var rootCmd = &cobra.Command{Use: "maninflux-cli"}
+
+	rootCmd.AddCommand(cmdStatus)
+	rootCmd.AddCommand(cmdDevices)
+	rootCmd.AddCommand(cmdChannels)
+
+	cmdDevices.AddCommand(cmdCreateDevice)
+	cmdDevices.AddCommand(cmdGetDevice)
+	cmdDevices.AddCommand(cmdUpdateDevice)
+	cmdDevices.AddCommand(cmdDeleteDevice)
+	cmdDevices.AddCommand(cmdPlugDevice)
+
+	cmdChannels.AddCommand(cmdCreateChannel)
+	cmdChannels.AddCommand(cmdGetChannel)
+	cmdChannels.AddCommand(cmdUpdateChannel)
+	cmdChannels.AddCommand(cmdDeleteChannel)
+	cmdChannels.AddCommand(cmdPlugChannel)
+
+	if err := rootCmd.Execute(); err != nil {
+        log.Fatal(err)
+    }
 }
 
 var banner = `
@@ -192,40 +271,7 @@ var banner = `
 [w] http://mainflux.io
 [t] @mainflux
 
-`
-
-var cliHelp = `
 Mainflux CLI is a command line tool for administration and provisioning of
 Mainflux IoT server. More information can be found on project's website:
 http://mainflux.io
-
-COMMANDS
-	status      Mainflux server health check
-	devices     Manipulation with devices. Do 'devices help' for info.
-	channels    Manipulation with channels. Do 'channels help' for info.
-
-	clear       Clears the screen
-	exit        Exits the CLI
-
-	help        Prints this help
-`
-
-var devicesHelp = `
-COMMANDS
-	create                                  Creates new device and generates it's UUID
-	get                                     Gets all devices
-	get <device_id>                         Gets device by id
-	update <device_id> <JSON_string>        Updates device record
-	delete <device_id                       Removes device
-	plug <device_d> <JSON_channels_list>    Plugs device into the channel(s)
-`
-
-var channelsHelp = `
-COMMANDS
-	create                                  Creates new channel and generates it's UUID
-	get                                     Gets all channels
-	get <channel_id>                        Gets channel by id
-	update <channel_id> <JSON_string>       Updates channel record
-	delete <channel_id>                     Removes channel
-	plug <channel_id> <JSON_devices_list>   Plugs device(s) into the channel
 `
