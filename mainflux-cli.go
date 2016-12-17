@@ -15,7 +15,7 @@ import (
 
 	"github.com/mainflux/mainflux-cli/cmd"
 	"github.com/mainflux/mainflux-core/models"
-    "github.com/spf13/cobra"
+	"github.com/spf13/cobra"
 )
 
 func main() {
@@ -35,45 +35,45 @@ func main() {
 	// Status
 	////
 	var cmdStatus = &cobra.Command{
-        Use:   "status",
-        Short: "Server status",
-        Long:  `Mainflux server health checkt.`,
-        Run: func(cmdCobra *cobra.Command, args []string) {
+		Use:   "status",
+		Short: "Server status",
+		Long:  `Mainflux server health checkt.`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
 			s := cmd.Status()
 			fmt.Println(s)
-        },
-    }
+		},
+	}
 
 	////
 	// Devices
 	////
 	var cmdDevices = &cobra.Command{
-        Use:   "devices",
-        Short: "Manipulation with devices.",
-        Long:  `Manipulation with devices: create, delete or update devices.`,
-        Run: func(cmdCobra *cobra.Command, args []string) {
+		Use:   "devices",
+		Short: "Manipulation with devices.",
+		Long:  `Manipulation with devices: create, delete or update devices.`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
 			s := cmd.GetDevices()
 			fmt.Println(s)
-        },
-    }
+		},
+	}
 
 	// Create Device
 	var cmdCreateDevice = &cobra.Command{
-        Use:   "create",
-        Short: "create or create <JSON_device>",
-        Long:  `Creates new device and generates it's UUID`,
-        Run: func(cmdCobra *cobra.Command, args []string) {
-				s := cmd.CreateDevice("")
-				fmt.Println(s)
-        },
-    }
+		Use:   "create",
+		Short: "create or create <JSON_device>",
+		Long:  `Creates new device and generates it's UUID`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			s := cmd.CreateDevice("")
+			fmt.Println(s)
+		},
+	}
 
 	// Get Device
 	var cmdGetDevice = &cobra.Command{
-        Use:   "get",
-        Short: "get or get <device_id>",
-        Long:  `Gets all devices or Gets device by id`,
-        Run: func(cmdCobra *cobra.Command, args []string) {
+		Use:   "get",
+		Short: "get or get <device_id>",
+		Long:  `Gets all devices or Gets device by id`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
 			if l == 0 {
 				s = cmd.GetDevices()
@@ -83,61 +83,61 @@ func main() {
 				}
 			}
 			fmt.Println(s)
-        },
-    }
+		},
+	}
 
 	// Delete Device
 	var cmdDeleteDevice = &cobra.Command{
-        Use:   "delete",
-        Short: "delete all or delete <device_id>",
-        Long:  `Removes device from DB`,
-        Run: func(cmdCobra *cobra.Command, args []string) {
+		Use:   "delete",
+		Short: "delete all or delete <device_id>",
+		Long:  `Removes device from DB`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
 			if l != 0 {
-				if args[0] == "all" {
-					var devices []models.Device
-					s = cmd.GetDevices()
-					json.Unmarshal([]byte(s), &devices);
-					for i := 0; i  < len(devices); i++ {
-						s = s + cmd.DeleteDevice(devices[i].ID)
-					}
-				} else {
-					for i := 0; i < l; i++ {
-						s = s + cmd.DeleteDevice(args[i])
-					}
+			if args[0] == "all" {
+				var devices []models.Device
+				s = cmd.GetDevices()
+				json.Unmarshal([]byte(s), &devices);
+				for i := 0; i  < len(devices); i++ {
+					s = s + cmd.DeleteDevice(devices[i].ID)
 				}
-				fmt.Println(s)
+			} else {
+				for i := 0; i < l; i++ {
+					s = s + cmd.DeleteDevice(args[i])
+				}
 			}
-        },
-    }
+			fmt.Println(s)
+			}
+		},
+	}
 
 	// Plug Device
 	var cmdPlugDevice = &cobra.Command{
-        Use:   "plug",
-        Short: "plug <device_d> <JSON_channels> ",
-        Long:  `Plugs device into the channel(s)`,
-        Run: func(cmdCobra *cobra.Command, args []string) {
+		Use:   "plug",
+		Short: "plug <device_d> <JSON_channels> ",
+		Long:  `Plugs device into the channel(s)`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
 			if l > 2 {
 				s = cmd.PlugDevice(args[0], args[1])
 				fmt.Println(s)
 			}
-        },
-    }
+		},
+	}
 
 	// Update Device
 	var cmdUpdateDevice = &cobra.Command{
-        Use:   "update",
-        Short: "update <device_id> <JSON_string>",
-        Long:  `Update device record`,
-        Run: func(cmdCobra *cobra.Command, args []string) {
+		Use:   "update",
+		Short: "update <device_id> <JSON_string>",
+		Long:  `Update device record`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
 			if l > 2 {
 				s = cmd.UpdateDevice(args[0], args[1])
 				fmt.Println(s)
 			}
-        },
-    }
+		},
+	}
 
 	////
 	// Channels
@@ -154,21 +154,21 @@ func main() {
 
 	// Create Channel
 	var cmdCreateChannel = &cobra.Command{
-        Use:   "create",
-        Short: "create or create <JSON_channel>",
-        Long:  `Creates new channel and generates it's UUID`,
-        Run: func(cmdCobra *cobra.Command, args []string) {
-				s = cmd.CreateChannel("")
-				fmt.Println(s)
-        },
-    }
+		Use:   "create",
+		Short: "create or create <JSON_channel>",
+		Long:  `Creates new channel and generates it's UUID`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			s = cmd.CreateChannel("")
+			fmt.Println(s)
+		},
+	}
 
 	// Get Device
 	var cmdGetChannel = &cobra.Command{
-        Use:   "get",
-        Short: "get or get <channel_id>",
-        Long:  `Gets all channels or Gets channel by id`,
-        Run: func(cmdCobra *cobra.Command, args []string) {
+		Use:   "get",
+		Short: "get or get <channel_id>",
+		Long:  `Gets all channels or Gets channel by id`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
 			if l == 0 {
 				s = cmd.GetChannels()
@@ -178,28 +178,28 @@ func main() {
 				}
 			}
 			fmt.Println(s)
-        },
-    }
+		},
+	}
 
 	// Update Channel
 	var cmdUpdateChannel = &cobra.Command{
-        Use:   "update",
-        Short: "update <channel_id> <JSON_string>",
-        Long:  `Updates channel record`,
-        Run: func(cmdCobra *cobra.Command, args []string) {
+		Use:   "update",
+		Short: "update <channel_id> <JSON_string>",
+		Long:  `Updates channel record`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
 			if l > 2 {
 				s = cmd.UpdateChannel(args[0], args[1])
 				fmt.Println(s)
 			}
-        },
-    }
+		},
+	}
 
 	// Delete Channel
 	var cmdDeleteChannel = &cobra.Command{
-        Use:   "delete",
-        Short: "delete <channel_id>",
-        Long:  `Removes channel`,
+		Use:   "delete",
+		Short: "delete <channel_id>",
+		Long:  `Removes channel`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
 			if l != 0 {
@@ -217,24 +217,24 @@ func main() {
 				}
 				fmt.Println(s)
 			}
-        },
-    }
+		},
+	}
 
 	// Plug Channel
 	var cmdPlugChannel = &cobra.Command{
-        Use:   "plug",
-        Short: "plug <channel_id> <JSON_device>",
-        Long:  `Plugs device(s) into the channel`,
-        Run: func(cmdCobra *cobra.Command, args []string) {
+		Use:   "plug",
+		Short: "plug <channel_id> <JSON_device>",
+		Long:  `Plugs device(s) into the channel`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
 			if l > 2 {
 				s = cmd.PlugChannel(args[0], args[1])
 				fmt.Println(s)
 			}
-        },
-    }
+		},
+	}
 
-    var rootCmd = &cobra.Command{Use: "maninflux-cli"}
+	var rootCmd = &cobra.Command{Use: "maninflux-cli"}
 
 	rootCmd.AddCommand(cmdStatus)
 	rootCmd.AddCommand(cmdDevices)
@@ -253,8 +253,8 @@ func main() {
 	cmdChannels.AddCommand(cmdPlugChannel)
 
 	if err := rootCmd.Execute(); err != nil {
-        log.Fatal(err)
-    }
+		log.Fatal(err)
+	}
 }
 
 var banner = `
