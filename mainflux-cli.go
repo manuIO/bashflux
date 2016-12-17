@@ -96,8 +96,7 @@ func main() {
 			if l != 0 {
 			if args[0] == "all" {
 				var devices []models.Device
-				s = cmd.GetDevices()
-				json.Unmarshal([]byte(s), &devices);
+				json.Unmarshal([]byte(cmd.GetDevices()), &devices);
 				for i := 0; i  < len(devices); i++ {
 					s = s + cmd.DeleteDevice(devices[i].ID)
 				}
@@ -205,8 +204,7 @@ func main() {
 			if l != 0 {
 				if args[0] == "all" {
 					var channels []models.Device
-					s = cmd.GetChannels()
-					json.Unmarshal([]byte(s), &channels);
+					json.Unmarshal([]byte(cmd.GetChannels()), &channels);
 					for i := 0; i  < len(channels); i++ {
 						s = s + cmd.DeleteChannel(channels[i].ID)
 					}
