@@ -94,18 +94,18 @@ func main() {
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
 			if l != 0 {
-			if args[0] == "all" {
-				var devices []models.Device
-				json.Unmarshal([]byte(cmd.GetDevices()), &devices);
-				for i := 0; i  < len(devices); i++ {
-					s = s + cmd.DeleteDevice(devices[i].ID)
+				if args[0] == "all" {
+					var devices []models.Device
+					json.Unmarshal([]byte(cmd.GetDevices()), &devices)
+					for i := 0; i < len(devices); i++ {
+						s = s + cmd.DeleteDevice(devices[i].ID)
+					}
+				} else {
+					for i := 0; i < l; i++ {
+						s = s + cmd.DeleteDevice(args[i])
+					}
 				}
-			} else {
-				for i := 0; i < l; i++ {
-					s = s + cmd.DeleteDevice(args[i])
-				}
-			}
-			fmt.Println(s)
+				fmt.Println(s)
 			}
 		},
 	}
@@ -162,7 +162,7 @@ func main() {
 		},
 	}
 
-	// Get Device
+	// Get Channel
 	var cmdGetChannel = &cobra.Command{
 		Use:   "get",
 		Short: "get or get <channel_id>",
@@ -204,8 +204,8 @@ func main() {
 			if l != 0 {
 				if args[0] == "all" {
 					var channels []models.Device
-					json.Unmarshal([]byte(cmd.GetChannels()), &channels);
-					for i := 0; i  < len(channels); i++ {
+					json.Unmarshal([]byte(cmd.GetChannels()), &channels)
+					for i := 0; i < len(channels); i++ {
 						s = s + cmd.DeleteChannel(channels[i].ID)
 					}
 				} else {
@@ -232,11 +232,53 @@ func main() {
 		},
 	}
 
+	////
+	// Messages
+	////
+	var cmdMessages = &cobra.Command{
+		Use:   "msg",
+		Short: "Send or retrieve messages",
+		Long:  `Send or retrieve messages: controll message flow on the channel`,
+	}
+
+	// Get Message
+	var cmdGetMessage = &cobra.Command{
+		Use:   "get",
+		Short: "get <channel_id>",
+		Long:  `Gets all messages from a given channel`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			l := len(args)
+			if l > 0 {
+				s = cmd.GetMsg(args[0])
+			} else {
+				s = "Missing <channel_id>"
+			}
+			fmt.Println(s)
+		},
+	}
+
+	// Send Message
+	var cmdSendMessage = &cobra.Command{
+		Use:   "send",
+		Short: "send <channel_id> <JSON_string>",
+		Long:  `Sends message on the channel`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			l := len(args)
+			if l > 1 {
+				s = cmd.SendMsg(args[0], args[1])
+				fmt.Println(s)
+			} else {
+				s = "Two arguments needed: <channel_id> and JSON message"
+			}
+		},
+	}
+
 	var rootCmd = &cobra.Command{Use: "maninflux-cli"}
 
 	rootCmd.AddCommand(cmdStatus)
 	rootCmd.AddCommand(cmdDevices)
 	rootCmd.AddCommand(cmdChannels)
+	rootCmd.AddCommand(cmdMessages)
 
 	cmdDevices.AddCommand(cmdCreateDevice)
 	cmdDevices.AddCommand(cmdGetDevice)
@@ -249,6 +291,9 @@ func main() {
 	cmdChannels.AddCommand(cmdUpdateChannel)
 	cmdChannels.AddCommand(cmdDeleteChannel)
 	cmdChannels.AddCommand(cmdPlugChannel)
+
+	cmdMessages.AddCommand(cmdGetMessage)
+	cmdMessages.AddCommand(cmdSendMessage)
 
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatal(err)
@@ -269,7 +314,4 @@ var banner = `
 [w] http://mainflux.io
 [t] @mainflux
 
-Mainflux CLI is a command line tool for administration and provisioning of
-Mainflux IoT server. More information can be found on project's website:
-http://mainflux.io
 `
