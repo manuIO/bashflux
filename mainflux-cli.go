@@ -273,12 +273,54 @@ func main() {
 		},
 	}
 
+	////
+	// Users
+	////
+	var cmdCreateUser = &cobra.Command{
+		Use:   "user",
+		Short: "user <name> <password>",
+		Long:  `Creates new user`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			var httpPort = 8180
+			cmd.SetServerAddr(httpHost, httpPort)
+			l := len(args)
+			if l > 1 {
+				s = cmd.CreateUser(args[0], args[1])
+				fmt.Println(s)
+			} else {
+				fmt.Println("Usage: " + cmdCobra.Short)
+			}
+		},
+	}
+
+	////
+	// Sessions
+	////
+	var cmdInitSession = &cobra.Command{
+		Use:   "session",
+		Short: "session <name> <password>",
+		Long:  `Creates new user`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			var httpPort = 8180
+			cmd.SetServerAddr(httpHost, httpPort)
+			l := len(args)
+			if l > 1 {
+				s = cmd.InitSession(args[0], args[1])
+				fmt.Println(s)
+			} else {
+				fmt.Println("Usage: " + cmdCobra.Short)
+			}
+		},
+	}
+
 	var rootCmd = &cobra.Command{Use: "maninflux-cli"}
 
 	rootCmd.AddCommand(cmdStatus)
 	rootCmd.AddCommand(cmdDevices)
 	rootCmd.AddCommand(cmdChannels)
 	rootCmd.AddCommand(cmdMessages)
+	rootCmd.AddCommand(cmdCreateUser)
+	rootCmd.AddCommand(cmdInitSession)
 
 	cmdDevices.AddCommand(cmdCreateDevice)
 	cmdDevices.AddCommand(cmdGetDevice)
