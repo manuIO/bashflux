@@ -14,6 +14,9 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"encoding/json"
+
+	"github.com/mainflux/mainflux-core/models"
 )
 
 // CreateChannel - creates new channel and generates UUID
@@ -47,12 +50,7 @@ func GetChannels() string {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	b, e := prettyJSON(body)
-	if e != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // GetChannel - gets channel by ID
@@ -65,12 +63,7 @@ func GetChannel(id string) string {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	b, e := prettyJSON(body)
-	if e != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // UpdateChannel - publishes SenML message on the channel
@@ -95,12 +88,7 @@ func UpdateChannel(id string, msg string) string {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	b, e := prettyJSON(body)
-	if e != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // DeleteChannel - removes channel
@@ -120,12 +108,29 @@ func DeleteChannel(id string) string {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	b, err := prettyJSON(body)
+	return GetPrettyJson(body)
+}
+
+// DeleteAllChannels - removes all channels
+func DeleteAllChannels() string {
+	var err error
+
+	url := UrlHTTP + "/channels"
+	rsp, err := netClient.Get(url)
 	if err != nil {
 		return err.Error()
 	}
+	defer rsp.Body.Close()
+	body, err := ioutil.ReadAll(rsp.Body)
 
-	return string(b)
+	var channels []models.Channel
+	json.Unmarshal(body, &channels)
+	s := ""
+	for i := 0; i < len(channels); i++ {
+		s = s + DeleteChannel(channels[i].ID)
+	}
+
+	return s
 }
 
 // PlugChannel - plugs list of devices into the channel
@@ -142,10 +147,5 @@ func PlugChannel(id string, devices string) string {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	b, err := prettyJSON(body)
-	if err != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }

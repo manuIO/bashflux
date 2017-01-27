@@ -32,8 +32,7 @@ func CreateUser(user string, pwd string) string {
 	var s = fmt.Sprintf("POST/users: Status %d\n", resp.StatusCode)
 	if resp.StatusCode == 201 {
 		body, _ := ioutil.ReadAll(resp.Body)
-		b, _ := prettyJSON(body)
-		s = fmt.Sprintf("%s %s", s, b)
+		s = fmt.Sprintf("%s %s", s, GetPrettyJson(body))
 	} else {
 		s = fmt.Sprintf("%s %s", s, http.StatusText(resp.StatusCode))
 	}
@@ -58,8 +57,7 @@ func InitSession(user string, pwd string) string {
 	var s = fmt.Sprintf("POST/sessions: Status %d\n", resp.StatusCode)
 	if resp.StatusCode == 201 {
 		body, _ := ioutil.ReadAll(resp.Body)
-		b, _ := prettyJSON(body)
-		s = fmt.Sprintf("%s %s", s, b)
+		s = fmt.Sprintf("%s %s", s, GetPrettyJson(body))
 	} else {
 		s = fmt.Sprintf("%s %s", s, http.StatusText(resp.StatusCode))
 	}

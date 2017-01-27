@@ -14,6 +14,9 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"encoding/json"
+
+	"github.com/mainflux/mainflux-core/models"
 )
 
 // CreateDevice - creates new device and generates device UUID
@@ -28,12 +31,7 @@ func CreateDevice(msg string) string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, err := prettyJSON(body)
-	if err != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // GetDevices - gets all devices
@@ -46,12 +44,7 @@ func GetDevices() string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, e := prettyJSON(body)
-	if e != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // GetDevice - gets device by ID
@@ -64,12 +57,7 @@ func GetDevice(id string) string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, e := prettyJSON(body)
-	if e != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // UpdateDevice - updates device by ID
@@ -95,12 +83,7 @@ func UpdateDevice(id string, msg string) string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, err := prettyJSON(body)
-	if err != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // DeleteDevice - removes device
@@ -119,12 +102,29 @@ func DeleteDevice(id string) string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, err := prettyJSON(body)
+	return GetPrettyJson(body)
+}
+
+// DeleteAllDevices - removes all devices
+func DeleteAllDevices() string {
+	var err error
+
+	url := UrlHTTP + "/devices"
+	rsp, err := netClient.Get(url)
 	if err != nil {
 		return err.Error()
 	}
+	defer rsp.Body.Close()
+	body, err := ioutil.ReadAll(rsp.Body)
 
-	return string(b)
+	var devices []models.Device
+	json.Unmarshal(body, &devices)
+	s := ""
+	for i := 0; i < len(devices); i++ {
+		s = s + DeleteDevice(devices[i].ID)
+	}
+
+	return s
 }
 
 // CreateDevice - creates new device and generates device UUID
@@ -141,10 +141,5 @@ func PlugDevice(id string, channels string) string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, err := prettyJSON(body)
-	if err != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }

@@ -26,12 +26,7 @@ func GetMsg(id string) string {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	b, e := prettyJSON(body)
-	if e != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // SendMsg - publishes SenML message on the channel
