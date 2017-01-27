@@ -14,6 +14,10 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"encoding/json"
+
+	"github.com/mainflux/mainflux-core/models"
+	"github.com/hokaccha/go-prettyjson"
 )
 
 // CreateDevice - creates new device and generates device UUID
@@ -28,7 +32,7 @@ func CreateDevice(msg string) string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, err := prettyJSON(body)
+	b, err := prettyjson.Format([]byte(body))
 	if err != nil {
 		return err.Error()
 	}
@@ -46,7 +50,7 @@ func GetDevices() string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, e := prettyJSON(body)
+	b, e := prettyjson.Format([]byte(body))
 	if e != nil {
 		return err.Error()
 	}
@@ -64,7 +68,7 @@ func GetDevice(id string) string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, e := prettyJSON(body)
+	b, e := prettyjson.Format([]byte(body))
 	if e != nil {
 		return err.Error()
 	}
@@ -95,7 +99,7 @@ func UpdateDevice(id string, msg string) string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, err := prettyJSON(body)
+	b, err := prettyjson.Format([]byte(body))
 	if err != nil {
 		return err.Error()
 	}
@@ -119,12 +123,34 @@ func DeleteDevice(id string) string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, err := prettyJSON(body)
+	b, err := prettyjson.Format([]byte(body))
 	if err != nil {
 		return err.Error()
 	}
 
 	return string(b)
+}
+
+// DeleteAllDevices - removes all devices
+func DeleteAllDevices() string {
+	var err error
+
+	url := UrlHTTP + "/devices"
+	rsp, err := netClient.Get(url)
+	if err != nil {
+		return err.Error()
+	}
+	defer rsp.Body.Close()
+	body, err := ioutil.ReadAll(rsp.Body)
+
+	var devices []models.Device
+	json.Unmarshal(body, &devices)
+	s := ""
+	for i := 0; i < len(devices); i++ {
+		s = s + DeleteDevice(devices[i].ID)
+	}
+
+	return s
 }
 
 // CreateDevice - creates new device and generates device UUID
@@ -141,7 +167,7 @@ func PlugDevice(id string, channels string) string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, err := prettyJSON(body)
+	b, err := prettyjson.Format([]byte(body))
 	if err != nil {
 		return err.Error()
 	}

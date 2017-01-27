@@ -14,6 +14,10 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"encoding/json"
+
+	"github.com/mainflux/mainflux-core/models"
+	"github.com/hokaccha/go-prettyjson"
 )
 
 // CreateChannel - creates new channel and generates UUID
@@ -47,7 +51,7 @@ func GetChannels() string {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	b, e := prettyJSON(body)
+	b, e := prettyjson.Format([]byte(body))
 	if e != nil {
 		return err.Error()
 	}
@@ -65,7 +69,7 @@ func GetChannel(id string) string {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	b, e := prettyJSON(body)
+	b, e := prettyjson.Format([]byte(body))
 	if e != nil {
 		return err.Error()
 	}
@@ -95,7 +99,7 @@ func UpdateChannel(id string, msg string) string {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	b, e := prettyJSON(body)
+	b, e := prettyjson.Format([]byte(body))
 	if e != nil {
 		return err.Error()
 	}
@@ -120,12 +124,34 @@ func DeleteChannel(id string) string {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	b, err := prettyJSON(body)
+	b, err := prettyjson.Format([]byte(body))
 	if err != nil {
 		return err.Error()
 	}
 
 	return string(b)
+}
+
+// DeleteAllChannels - removes all channels
+func DeleteAllChannels() string {
+	var err error
+
+	url := UrlHTTP + "/channels"
+	rsp, err := netClient.Get(url)
+	if err != nil {
+		return err.Error()
+	}
+	defer rsp.Body.Close()
+	body, err := ioutil.ReadAll(rsp.Body)
+
+	var channels []models.Channel
+	json.Unmarshal(body, &channels)
+	s := ""
+	for i := 0; i < len(channels); i++ {
+		s = s + DeleteChannel(channels[i].ID)
+	}
+
+	return s
 }
 
 // PlugChannel - plugs list of devices into the channel
@@ -142,7 +168,7 @@ func PlugChannel(id string, devices string) string {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	b, err := prettyJSON(body)
+	b, err := prettyjson.Format([]byte(body))
 	if err != nil {
 		return err.Error()
 	}

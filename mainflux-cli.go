@@ -9,12 +9,10 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 
 	"github.com/mainflux/mainflux-cli/cmd"
-	"github.com/mainflux/mainflux-core/models"
 	"github.com/spf13/cobra"
 )
 
@@ -95,11 +93,7 @@ func main() {
 			l := len(args)
 			if l != 0 {
 				if args[0] == "all" {
-					var devices []models.Device
-					json.Unmarshal([]byte(cmd.GetDevices()), &devices)
-					for i := 0; i < len(devices); i++ {
-						s = s + cmd.DeleteDevice(devices[i].ID)
-					}
+					s = cmd.DeleteAllDevices();
 				} else {
 					for i := 0; i < l; i++ {
 						s = s + cmd.DeleteDevice(args[i])
@@ -205,11 +199,7 @@ func main() {
 			l := len(args)
 			if l != 0 {
 				if args[0] == "all" {
-					var channels []models.Channel
-					json.Unmarshal([]byte(cmd.GetChannels()), &channels)
-					for i := 0; i < len(channels); i++ {
-						s = s + cmd.DeleteChannel(channels[i].ID)
-					}
+					s = cmd.DeleteAllChannels();
 				} else {
 					for i := 0; i < l; i++ {
 						s = s + cmd.DeleteChannel(args[i])
