@@ -131,9 +131,11 @@ func main() {
 		Long:  `Update device record`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
-			if l > 2 {
+			if l == 2 {
 				s = cmd.UpdateDevice(args[0], args[1])
 				fmt.Println(s)
+			} else {
+				fmt.Println("Usage: " + cmdCobra.Short)
 			}
 		},
 	}
