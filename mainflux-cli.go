@@ -205,7 +205,7 @@ func main() {
 			l := len(args)
 			if l != 0 {
 				if args[0] == "all" {
-					var channels []models.Device
+					var channels []models.Channel
 					json.Unmarshal([]byte(cmd.GetChannels()), &channels)
 					for i := 0; i < len(channels); i++ {
 						s = s + cmd.DeleteChannel(channels[i].ID)
