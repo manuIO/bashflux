@@ -17,7 +17,6 @@ import (
 	"encoding/json"
 
 	"github.com/mainflux/mainflux-core/models"
-	"github.com/hokaccha/go-prettyjson"
 )
 
 // CreateDevice - creates new device and generates device UUID
@@ -32,12 +31,7 @@ func CreateDevice(msg string) string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, err := prettyjson.Format([]byte(body))
-	if err != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // GetDevices - gets all devices
@@ -50,12 +44,7 @@ func GetDevices() string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, e := prettyjson.Format([]byte(body))
-	if e != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // GetDevice - gets device by ID
@@ -68,12 +57,7 @@ func GetDevice(id string) string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, e := prettyjson.Format([]byte(body))
-	if e != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // UpdateDevice - updates device by ID
@@ -99,12 +83,7 @@ func UpdateDevice(id string, msg string) string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, err := prettyjson.Format([]byte(body))
-	if err != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // DeleteDevice - removes device
@@ -123,12 +102,7 @@ func DeleteDevice(id string) string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, err := prettyjson.Format([]byte(body))
-	if err != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // DeleteAllDevices - removes all devices
@@ -167,10 +141,5 @@ func PlugDevice(id string, channels string) string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, err := prettyjson.Format([]byte(body))
-	if err != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }

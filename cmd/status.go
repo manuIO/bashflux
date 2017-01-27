@@ -10,8 +10,6 @@ package cmd
 
 import (
 	"io/ioutil"
-
-	"github.com/hokaccha/go-prettyjson"
 )
 
 // Status - server health check
@@ -24,10 +22,5 @@ func Status() string {
 	defer rsp.Body.Close()
 	body, err := ioutil.ReadAll(rsp.Body)
 
-	b, e := prettyjson.Format([]byte(body))
-	if e != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }

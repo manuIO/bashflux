@@ -17,7 +17,6 @@ import (
 	"encoding/json"
 
 	"github.com/mainflux/mainflux-core/models"
-	"github.com/hokaccha/go-prettyjson"
 )
 
 // CreateChannel - creates new channel and generates UUID
@@ -51,12 +50,7 @@ func GetChannels() string {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	b, e := prettyjson.Format([]byte(body))
-	if e != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // GetChannel - gets channel by ID
@@ -69,12 +63,7 @@ func GetChannel(id string) string {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	b, e := prettyjson.Format([]byte(body))
-	if e != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // UpdateChannel - publishes SenML message on the channel
@@ -99,12 +88,7 @@ func UpdateChannel(id string, msg string) string {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	b, e := prettyjson.Format([]byte(body))
-	if e != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // DeleteChannel - removes channel
@@ -124,12 +108,7 @@ func DeleteChannel(id string) string {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	b, err := prettyjson.Format([]byte(body))
-	if err != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // DeleteAllChannels - removes all channels
@@ -168,10 +147,5 @@ func PlugChannel(id string, devices string) string {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	b, err := prettyjson.Format([]byte(body))
-	if err != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }

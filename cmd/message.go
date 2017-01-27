@@ -13,8 +13,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
-
-	"github.com/hokaccha/go-prettyjson"
 )
 
 // GetMsg - gets messages from the channel
@@ -28,12 +26,7 @@ func GetMsg(id string) string {
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 
-	b, e := prettyjson.Format([]byte(body))
-	if e != nil {
-		return err.Error()
-	}
-
-	return string(b)
+	return GetPrettyJson(body)
 }
 
 // SendMsg - publishes SenML message on the channel
