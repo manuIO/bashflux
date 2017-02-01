@@ -10,7 +10,6 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"strconv"
 	"strings"
@@ -21,8 +20,6 @@ import (
 
 // CreateChannel - creates new channel and generates UUID
 func CreateChannel(msg string) string {
-	var err error
-
 	url := UrlHTTP + "/channels"
 	resp, err := netClient.Post(url, "application/json", nil)
 	if err != nil {
@@ -42,13 +39,9 @@ func CreateChannel(msg string) string {
 
 // GetChannels - gets all channels
 func GetChannels() string {
-	url := UrlHTTP + "/channels"
+	url := UrlHTTP + "/channels?elimit=3"
 	resp, err := netClient.Get(url)
-	if err != nil {
-		return err.Error()
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body := GetHttpRespBody(resp, err)
 
 	return GetPrettyJson(body)
 }
@@ -56,20 +49,13 @@ func GetChannels() string {
 // GetChannel - gets channel by ID
 func GetChannel(id string) string {
 	url := UrlHTTP + "/channels/" + id
-	resp, err := netClient.Get(url)
-	if err != nil {
-		return err.Error()
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body := GetHttpRespBody(netClient.Get(url))
 
 	return GetPrettyJson(body)
 }
 
 // UpdateChannel - publishes SenML message on the channel
 func UpdateChannel(id string, msg string) string {
-	var err error
-
 	url := UrlHTTP + "/channels/" + id
 	sr := strings.NewReader(msg)
 	req, err := http.NewRequest("PUT", url, sr)
@@ -81,50 +67,30 @@ func UpdateChannel(id string, msg string) string {
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Content-Length", strconv.Itoa(len(msg)))
 
-	resp, err := netClient.Do(req)
-	if err != nil {
-		return err.Error()
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body := GetHttpRespBody(netClient.Do(req))
 
 	return GetPrettyJson(body)
 }
 
 // DeleteChannel - removes channel
 func DeleteChannel(id string) string {
-	var err error
-
 	url := UrlHTTP + "/channels/" + id
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
 		return err.Error()
 	}
-	resp, err := netClient.Do(req)
-	if err != nil {
-		fmt.Println(err)
-		return err.Error()
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body := GetHttpRespBody(netClient.Do(req))
 
 	return GetPrettyJson(body)
 }
 
 // DeleteAllChannels - removes all channels
 func DeleteAllChannels() string {
-	var err error
-
 	url := UrlHTTP + "/channels"
-	rsp, err := netClient.Get(url)
-	if err != nil {
-		return err.Error()
-	}
-	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
+	body := GetHttpRespBody(netClient.Get(url))
 
 	var channels []models.Channel
-	json.Unmarshal(body, &channels)
+	json.Unmarshal([]byte(body), &channels)
 	s := ""
 	for i := 0; i < len(channels); i++ {
 		s = s + DeleteChannel(channels[i].ID)
@@ -135,17 +101,10 @@ func DeleteAllChannels() string {
 
 // PlugChannel - plugs list of devices into the channel
 func PlugChannel(id string, devices string) string {
-	var err error
-
 	url := UrlHTTP + "/channels/" + id + "/plug"
 	sr := strings.NewReader(devices)
-	resp, err := netClient.Post(url, "application/json", sr)
-	if err != nil {
-		fmt.Println(err)
-		return err.Error()
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+
+	body := GetHttpRespBody(netClient.Post(url, "application/json", sr))
 
 	return GetPrettyJson(body)
 }

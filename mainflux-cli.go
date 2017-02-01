@@ -313,6 +313,8 @@ func main() {
 	rootCmd.AddCommand(cmdMessages)
 	rootCmd.AddCommand(cmdCreateUser)
 	rootCmd.AddCommand(cmdInitSession)
+	rootCmd.AddCommand(cmdCreateUser)
+	rootCmd.AddCommand(cmdGetApiKeys)
 
 	cmdDevices.AddCommand(cmdCreateDevice)
 	cmdDevices.AddCommand(cmdGetDevice)

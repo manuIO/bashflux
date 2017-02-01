@@ -10,7 +10,6 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"strings"
 )
@@ -20,11 +19,7 @@ func GetMsg(id string) string {
 
 	url := UrlHTTP + "/channels/" + id + "/msg"
 	resp, err := netClient.Get(url)
-	if err != nil {
-		return err.Error()
-	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body := GetHttpRespBody(resp, err)
 
 	return GetPrettyJson(body)
 }

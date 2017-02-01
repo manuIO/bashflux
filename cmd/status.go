@@ -8,19 +8,10 @@
 
 package cmd
 
-import (
-	"io/ioutil"
-)
-
 // Status - server health check
 func Status() string {
 	url := UrlHTTP + "/status"
-	rsp, err := netClient.Get(url)
-	if err != nil {
-		return err.Error()
-	}
-	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
+	body := GetHttpRespBody(netClient.Get(url))
 
 	return GetPrettyJson(body)
 }
