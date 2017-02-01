@@ -39,7 +39,7 @@ func CreateChannel(msg string) string {
 
 // GetChannels - gets all channels
 func GetChannels() string {
-	url := UrlHTTP + "/channels?elimit=3"
+	url := UrlHTTP + "/channels"
 	resp, err := netClient.Get(url)
 	body := GetHttpRespBody(resp, err)
 
