@@ -19,7 +19,7 @@ export PATH=$PATH:$GOBIN
 ```
 
 #### Get the code
-Use [`go`](https://golang.org/cmd/go/) tool to "get" (i.e. fetch and build) `mainflux-core-server` package:
+Use [`go`](https://golang.org/cmd/go/) tool to "get" (i.e. fetch and build) `mainflux-cli` package:
 ```bash
 go get github.com/mainflux/mainflux-cli
 ```
