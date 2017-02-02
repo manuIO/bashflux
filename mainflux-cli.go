@@ -99,8 +99,10 @@ func main() {
 						s = s + cmd.DeleteDevice(args[i])
 					}
 				}
-				fmt.Println(s)
+			} else {
+				s = "Usage: " + cmdCobra.Short
 			}
+			fmt.Println(s)
 		},
 	}
 
@@ -111,10 +113,12 @@ func main() {
 		Long:  `Plugs device into the channel(s)`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
-			if l > 2 {
+			if l == 2 {
 				s = cmd.PlugDevice(args[0], args[1])
-				fmt.Println(s)
+			} else {
+				s = "Usage: " + cmdCobra.Short
 			}
+			fmt.Println(s)
 		},
 	}
 
@@ -127,10 +131,10 @@ func main() {
 			l := len(args)
 			if l == 2 {
 				s = cmd.UpdateDevice(args[0], args[1])
-				fmt.Println(s)
 			} else {
-				fmt.Println("Usage: " + cmdCobra.Short)
+				s = "Usage: " + cmdCobra.Short
 			}
+			fmt.Println(s)
 		},
 	}
 
@@ -183,10 +187,12 @@ func main() {
 		Long:  `Updates channel record`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
-			if l > 2 {
+			if l == 2 {
 				s = cmd.UpdateChannel(args[0], args[1])
-				fmt.Println(s)
+			} else {
+				s = "Usage: " + cmdCobra.Short
 			}
+			fmt.Println(s)
 		},
 	}
 
@@ -205,8 +211,10 @@ func main() {
 						s = s + cmd.DeleteChannel(args[i])
 					}
 				}
-				fmt.Println(s)
+			} else {
+				s = "Usage: " + cmdCobra.Short
 			}
+			fmt.Println(s)
 		},
 	}
 
@@ -217,10 +225,12 @@ func main() {
 		Long:  `Plugs device(s) into the channel`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
-			if l > 2 {
+			if l == 2 {
 				s = cmd.PlugChannel(args[0], args[1])
-				fmt.Println(s)
+			} else {
+				s = "Usage: " + cmdCobra.Short
 			}
+			fmt.Println(s)
 		},
 	}
 
@@ -243,7 +253,7 @@ func main() {
 			if l > 0 {
 				s = cmd.GetMsg(args[0])
 			} else {
-				s = "Missing <channel_id>"
+				s = "Usage: " + cmdCobra.Short
 			}
 			fmt.Println(s)
 		},
@@ -258,10 +268,10 @@ func main() {
 			l := len(args)
 			if l > 1 {
 				s = cmd.SendMsg(args[0], args[1])
-				fmt.Println(s)
 			} else {
-				s = "Two arguments needed: <channel_id> and JSON message"
+				s = "Usage: " + cmdCobra.Short
 			}
+			fmt.Println(s)
 		},
 	}
 
@@ -278,10 +288,10 @@ func main() {
 			l := len(args)
 			if l > 1 {
 				s = cmd.CreateUser(args[0], args[1])
-				fmt.Println(s)
 			} else {
-				fmt.Println("Usage: " + cmdCobra.Short)
+				s = "Usage: " + cmdCobra.Short
 			}
+			fmt.Println(s)
 		},
 	}
 
@@ -298,10 +308,10 @@ func main() {
 			l := len(args)
 			if l > 1 {
 				s = cmd.LogginInUser(args[0], args[1])
-				fmt.Println(s)
 			} else {
-				fmt.Println("Usage: " + cmdCobra.Short)
+				s = "Usage: " + cmdCobra.Short
 			}
+			fmt.Println(s)
 		},
 	}
 
@@ -318,10 +328,10 @@ func main() {
 			l := len(args)
 			if l == 1 {
 				s = cmd.GetApiKeys(args[0])
-				fmt.Println(s)
 			} else {
-				fmt.Println("Usage: " + cmdCobra.Short)
+				s = "Usage: " + cmdCobra.Short
 			}
+			fmt.Println(s)
 		},
 	}
 
@@ -338,10 +348,10 @@ func main() {
 			l := len(args)
 			if l == 2 {
 				s = cmd.CreateApiKeys(args[0], args[1])
-				fmt.Println(s)
 			} else {
-				fmt.Println("Usage: " + cmdCobra.Short)
+				s = "Usage: " + cmdCobra.Short
 			}
+			fmt.Println(s)
 		},
 	}
 
@@ -358,10 +368,10 @@ func main() {
 			l := len(args)
 			if l == 2 {
 				s = cmd.DeleteApiKeys(args[0], args[1])
-				fmt.Println(s)
 			} else {
-				fmt.Println("Usage: " + cmdCobra.Short)
+				s = "Usage: " + cmdCobra.Short
 			}
+			fmt.Println(s)
 		},
 	}
 
@@ -378,15 +388,15 @@ func main() {
 			l := len(args)
 			if l == 2 {
 				s = cmd.GetOwnerApiKeys(args[0], args[1])
-				fmt.Println(s)
 			} else {
-				fmt.Println("Usage: " + cmdCobra.Short)
+				s = "Usage: " + cmdCobra.Short
 			}
+			fmt.Println(s)
 		},
 	}
 
 	////
-	// Get ApiKeys
+	// Update ApiKeys
 	////
 	var cmdUpdateApiKeys = &cobra.Command{
 		Use:   "update",
@@ -398,10 +408,10 @@ func main() {
 			l := len(args)
 			if l == 3 {
 				s = cmd.UpdateOwnerApiKeys(args[0], args[1], args[2])
-				fmt.Println(s)
 			} else {
-				fmt.Println("Usage: " + cmdCobra.Short)
+				s = "Usage: " + cmdCobra.Short
 			}
+			fmt.Println(s)
 		},
 	}
 
