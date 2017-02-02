@@ -50,7 +50,7 @@ func main() {
 	////
 	var cmdDevices = &cobra.Command{
 		Use:   "devices",
-		Short: "Manipulation with devices.",
+		Short: "Manipulation with devices",
 		Long:  `Manipulation with devices: create, delete or update devices.`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			s := cmd.GetDevices()
