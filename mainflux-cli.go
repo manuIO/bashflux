@@ -18,8 +18,11 @@ import (
 
 func main() {
 
-	var httpHost = "0.0.0.0"
-	var httpPort = 7070
+	const httpHost = "0.0.0.0"
+	const httpPort = 7070
+
+	const authHost = "0.0.0.0"
+	const authPort = 8180
 
 	var s string
 
@@ -294,8 +297,7 @@ func main() {
 		Short: "create <username> <password>",
 		Long:  `Creates new user`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			var httpPort = 8180
-			cmd.SetServerAddr(httpHost, httpPort)
+			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l > 1 {
 				s = cmd.CreateUser(args[0], args[1])
@@ -325,8 +327,7 @@ func main() {
 		Short: "init <username> <password>",
 		Long:  `Creates new session`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			var httpPort = 8180
-			cmd.SetServerAddr(httpHost, httpPort)
+			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l > 1 {
 				s = cmd.LogginInUser(args[0], args[1])
@@ -345,8 +346,7 @@ func main() {
 		Short: "Mainpulation with API keys",
 		Long:  `Get API key`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			var httpPort = 8180
-			cmd.SetServerAddr(httpHost, httpPort)
+			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l == 1 {
 				s = cmd.GetApiKeys(args[0])
@@ -365,8 +365,7 @@ func main() {
 		Short: "apikeys <authorization> <JSON_owner>",
 		Long:  `Get API key`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			var httpPort = 8180
-			cmd.SetServerAddr(httpHost, httpPort)
+			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l == 2 {
 				s = cmd.CreateApiKeys(args[0], args[1])
@@ -385,8 +384,7 @@ func main() {
 		Short: "delete <authorization> <key>",
 		Long:  `Delete API key`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			var httpPort = 8180
-			cmd.SetServerAddr(httpHost, httpPort)
+			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l == 2 {
 				s = cmd.DeleteApiKeys(args[0], args[1])
@@ -405,8 +403,7 @@ func main() {
 		Short: "owner <authorization> <key>",
 		Long:  `Get API key Owner`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			var httpPort = 8180
-			cmd.SetServerAddr(httpHost, httpPort)
+			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l == 2 {
 				s = cmd.GetOwnerApiKeys(args[0], args[1])
@@ -425,8 +422,7 @@ func main() {
 		Short: "update <authorization> <key> <JSON_owner>",
 		Long:  `Get Owner`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			var httpPort = 8180
-			cmd.SetServerAddr(httpHost, httpPort)
+			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l == 3 {
 				s = cmd.UpdateOwnerApiKeys(args[0], args[1], args[2])
