@@ -313,7 +313,7 @@ func main() {
 	////
 	var cmdSession = &cobra.Command{
 		Use:   "session",
-		Short: "Handle sessions",
+		Short: "Session management",
 		Long:  `Used for creation of sessions for a given clinet (user or device)`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			s = "Usage: " + cmdCobra.Short + ". Need additional commands (see --help)"
@@ -343,7 +343,7 @@ func main() {
 	////
 	var cmdApiKeys = &cobra.Command{
 		Use:   "apikeys",
-		Short: "Mainpulation with API keys",
+		Short: "API keys management",
 		Long:  `Get API key`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			cmd.SetServerAddr(authHost, authPort)
