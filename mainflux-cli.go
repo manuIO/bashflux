@@ -297,7 +297,107 @@ func main() {
 			cmd.SetServerAddr(httpHost, httpPort)
 			l := len(args)
 			if l > 1 {
-				s = cmd.InitSession(args[0], args[1])
+				s = cmd.LogginInUser(args[0], args[1])
+				fmt.Println(s)
+			} else {
+				fmt.Println("Usage: " + cmdCobra.Short)
+			}
+		},
+	}
+
+	////
+	// ApiKeys
+	////
+	var cmdApiKeys = &cobra.Command{
+		Use:   "apikeys",
+		Short: "apikeys <authorization>",
+		Long:  `Get API key`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			var httpPort = 8180
+			cmd.SetServerAddr(httpHost, httpPort)
+			l := len(args)
+			if l == 1 {
+				s = cmd.GetApiKeys(args[0])
+				fmt.Println(s)
+			} else {
+				fmt.Println("Usage: " + cmdCobra.Short)
+			}
+		},
+	}
+
+	////
+	// Create API key
+	////
+	var cmdCreateApiKeys = &cobra.Command{
+		Use:   "create",
+		Short: "apikeys <authorization> <JSON_owner>",
+		Long:  `Get API key`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			var httpPort = 8180
+			cmd.SetServerAddr(httpHost, httpPort)
+			l := len(args)
+			if l == 2 {
+				s = cmd.CreateApiKeys(args[0], args[1])
+				fmt.Println(s)
+			} else {
+				fmt.Println("Usage: " + cmdCobra.Short)
+			}
+		},
+	}
+
+	////
+	// Delete ApiKeys
+	////
+	var cmdDeleteApiKeys = &cobra.Command{
+		Use:   "delete",
+		Short: "delete <authorization> <key>",
+		Long:  `Delete API key`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			var httpPort = 8180
+			cmd.SetServerAddr(httpHost, httpPort)
+			l := len(args)
+			if l == 2 {
+				s = cmd.DeleteApiKeys(args[0], args[1])
+				fmt.Println(s)
+			} else {
+				fmt.Println("Usage: " + cmdCobra.Short)
+			}
+		},
+	}
+
+	////
+	// Get ApiKeys
+	////
+	var cmdGetApiKeys = &cobra.Command{
+		Use:   "owner",
+		Short: "owner <authorization> <key>",
+		Long:  `Get API key Owner`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			var httpPort = 8180
+			cmd.SetServerAddr(httpHost, httpPort)
+			l := len(args)
+			if l == 2 {
+				s = cmd.GetOwnerApiKeys(args[0], args[1])
+				fmt.Println(s)
+			} else {
+				fmt.Println("Usage: " + cmdCobra.Short)
+			}
+		},
+	}
+
+	////
+	// Get ApiKeys
+	////
+	var cmdUpdateApiKeys = &cobra.Command{
+		Use:   "update",
+		Short: "update <authorization> <key> <JSON_owner>",
+		Long:  `Get Owner`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			var httpPort = 8180
+			cmd.SetServerAddr(httpHost, httpPort)
+			l := len(args)
+			if l == 3 {
+				s = cmd.UpdateOwnerApiKeys(args[0], args[1], args[2])
 				fmt.Println(s)
 			} else {
 				fmt.Println("Usage: " + cmdCobra.Short)
@@ -314,7 +414,7 @@ func main() {
 	rootCmd.AddCommand(cmdCreateUser)
 	rootCmd.AddCommand(cmdInitSession)
 	rootCmd.AddCommand(cmdCreateUser)
-	rootCmd.AddCommand(cmdGetApiKeys)
+	rootCmd.AddCommand(cmdApiKeys)
 
 	cmdDevices.AddCommand(cmdCreateDevice)
 	cmdDevices.AddCommand(cmdGetDevice)
@@ -330,6 +430,11 @@ func main() {
 
 	cmdMessages.AddCommand(cmdGetMessage)
 	cmdMessages.AddCommand(cmdSendMessage)
+
+	cmdApiKeys.AddCommand(cmdCreateApiKeys)
+	cmdApiKeys.AddCommand(cmdDeleteApiKeys)
+	cmdApiKeys.AddCommand(cmdGetApiKeys)
+	cmdApiKeys.AddCommand(cmdUpdateApiKeys)
 
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatal(err)
