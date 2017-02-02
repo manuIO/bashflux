@@ -9,8 +9,6 @@
 package cmd
 
 import (
-	"fmt"
-	"io/ioutil"
 	"net/http"
 	"strconv"
 	"strings"
@@ -21,15 +19,9 @@ import (
 
 // CreateDevice - creates new device and generates device UUID
 func CreateDevice(msg string) string {
-	var err error
-
 	url := UrlHTTP + "/devices"
-	rsp, err := netClient.Post(url, "application/json", nil)
-	if err != nil {
-		return err.Error()
-	}
-	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
+	resp, err := netClient.Post(url, "application/json", nil)
+	body := GetHttpRespBody(resp, err)
 
 	return GetPrettyJson(body)
 }
@@ -37,12 +29,8 @@ func CreateDevice(msg string) string {
 // GetDevices - gets all devices
 func GetDevices() string {
 	url := UrlHTTP + "/devices"
-	rsp, err := netClient.Get(url)
-	if err != nil {
-		return err.Error()
-	}
-	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
+	resp, err := netClient.Get(url)
+	body := GetHttpRespBody(resp, err)
 
 	return GetPrettyJson(body)
 }
@@ -50,20 +38,14 @@ func GetDevices() string {
 // GetDevice - gets device by ID
 func GetDevice(id string) string {
 	url := UrlHTTP + "/devices/" + id
-	rsp, err := netClient.Get(url)
-	if err != nil {
-		return err.Error()
-	}
-	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
+	resp, err := netClient.Get(url)
+	body := GetHttpRespBody(resp, err)
 
 	return GetPrettyJson(body)
 }
 
 // UpdateDevice - updates device by ID
 func UpdateDevice(id string, msg string) string {
-	var err error
-
 	url := UrlHTTP + "/devices/" + id
 	sr := strings.NewReader(msg)
 	req, err := http.NewRequest("PUT", url, sr)
@@ -75,50 +57,34 @@ func UpdateDevice(id string, msg string) string {
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Content-Length", strconv.Itoa(len(msg)))
 
-	rsp, err := netClient.Do(req)
-	if err != nil {
-		fmt.Println(err)
-		return err.Error()
-	}
-	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
+	resp, err := netClient.Do(req)
+	body := GetHttpRespBody(resp, err)
 
 	return GetPrettyJson(body)
 }
 
 // DeleteDevice - removes device
 func DeleteDevice(id string) string {
-	var err error
-
 	url := UrlHTTP + "/devices/" + id
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
 		return err.Error()
 	}
-	rsp, err := netClient.Do(req)
-	if err != nil {
-		return err.Error()
-	}
-	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
+
+	resp, err := netClient.Do(req)
+	body := GetHttpRespBody(resp, err)
 
 	return GetPrettyJson(body)
 }
 
 // DeleteAllDevices - removes all devices
 func DeleteAllDevices() string {
-	var err error
-
 	url := UrlHTTP + "/devices"
-	rsp, err := netClient.Get(url)
-	if err != nil {
-		return err.Error()
-	}
-	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
+	resp, err := netClient.Get(url)
+	body := GetHttpRespBody(resp, err)
 
 	var devices []models.Device
-	json.Unmarshal(body, &devices)
+	json.Unmarshal([]byte(body), &devices)
 	s := ""
 	for i := 0; i < len(devices); i++ {
 		s = s + DeleteDevice(devices[i].ID)
@@ -129,17 +95,10 @@ func DeleteAllDevices() string {
 
 // CreateDevice - creates new device and generates device UUID
 func PlugDevice(id string, channels string) string {
-	var err error
-
 	url := UrlHTTP + "/devices/" + id + "/plug"
 	sr := strings.NewReader(channels)
 	rsp, err := netClient.Post(url, "application/json", sr)
-	if err != nil {
-		fmt.Println(err)
-		return err.Error()
-	}
-	defer rsp.Body.Close()
-	body, err := ioutil.ReadAll(rsp.Body)
+	body := GetHttpRespBody(rsp, err)
 
 	return GetPrettyJson(body)
 }
