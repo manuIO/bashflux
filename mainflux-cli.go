@@ -93,7 +93,7 @@ func main() {
 			l := len(args)
 			if l != 0 {
 				if args[0] == "all" {
-					s = cmd.DeleteAllDevices();
+					s = cmd.DeleteAllDevices()
 				} else {
 					for i := 0; i < l; i++ {
 						s = s + cmd.DeleteDevice(args[i])
@@ -205,7 +205,7 @@ func main() {
 			l := len(args)
 			if l != 0 {
 				if args[0] == "all" {
-					s = cmd.DeleteAllChannels();
+					s = cmd.DeleteAllChannels()
 				} else {
 					for i := 0; i < l; i++ {
 						s = s + cmd.DeleteChannel(args[i])
@@ -278,9 +278,20 @@ func main() {
 	////
 	// Users
 	////
+	var cmdUsers = &cobra.Command{
+		Use:   "users",
+		Short: "User management",
+		Long:  `Manages users in the system (creation, deletition and other system admin)`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			s = "Usage: " + cmdCobra.Short + ". Needs additional commands (see --help)"
+			fmt.Println(s)
+		},
+	}
+
+	// Create User
 	var cmdCreateUser = &cobra.Command{
-		Use:   "user",
-		Short: "user <name> <password>",
+		Use:   "create",
+		Short: "create <username> <password>",
 		Long:  `Creates new user`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			var httpPort = 8180
@@ -298,10 +309,21 @@ func main() {
 	////
 	// Sessions
 	////
-	var cmdInitSession = &cobra.Command{
+	var cmdSession = &cobra.Command{
 		Use:   "session",
-		Short: "session <name> <password>",
-		Long:  `Creates new user`,
+		Short: "Handle sessions",
+		Long:  `Used for creation of sessions for a given clinet (user or device)`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			s = "Usage: " + cmdCobra.Short + ". Need additional commands (see --help)"
+			fmt.Println(s)
+		},
+	}
+
+	// Init Session
+	var cmdInitSession = &cobra.Command{
+		Use:   "init",
+		Short: "init <username> <password>",
+		Long:  `Creates new session`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			var httpPort = 8180
 			cmd.SetServerAddr(httpHost, httpPort)
@@ -320,7 +342,7 @@ func main() {
 	////
 	var cmdApiKeys = &cobra.Command{
 		Use:   "apikeys",
-		Short: "apikeys <authorization>",
+		Short: "Mainpulation with API keys",
 		Long:  `Get API key`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			var httpPort = 8180
@@ -417,30 +439,40 @@ func main() {
 
 	var rootCmd = &cobra.Command{Use: "maninflux-cli"}
 
+	// Root Commands
 	rootCmd.AddCommand(cmdStatus)
 	rootCmd.AddCommand(cmdDevices)
 	rootCmd.AddCommand(cmdChannels)
 	rootCmd.AddCommand(cmdMessages)
-	rootCmd.AddCommand(cmdCreateUser)
-	rootCmd.AddCommand(cmdInitSession)
-	rootCmd.AddCommand(cmdCreateUser)
+	rootCmd.AddCommand(cmdSession)
+	rootCmd.AddCommand(cmdUsers)
 	rootCmd.AddCommand(cmdApiKeys)
 
+	// Devices
 	cmdDevices.AddCommand(cmdCreateDevice)
 	cmdDevices.AddCommand(cmdGetDevice)
 	cmdDevices.AddCommand(cmdUpdateDevice)
 	cmdDevices.AddCommand(cmdDeleteDevice)
 	cmdDevices.AddCommand(cmdPlugDevice)
 
+	// Channels
 	cmdChannels.AddCommand(cmdCreateChannel)
 	cmdChannels.AddCommand(cmdGetChannel)
 	cmdChannels.AddCommand(cmdUpdateChannel)
 	cmdChannels.AddCommand(cmdDeleteChannel)
 	cmdChannels.AddCommand(cmdPlugChannel)
 
+	// Messages
 	cmdMessages.AddCommand(cmdGetMessage)
 	cmdMessages.AddCommand(cmdSendMessage)
 
+	// Users
+	cmdUsers.AddCommand(cmdCreateUser)
+
+	// Session
+	cmdSession.AddCommand(cmdInitSession)
+
+	// ApiKeys
 	cmdApiKeys.AddCommand(cmdCreateApiKeys)
 	cmdApiKeys.AddCommand(cmdDeleteApiKeys)
 	cmdApiKeys.AddCommand(cmdGetApiKeys)
