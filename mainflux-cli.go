@@ -23,6 +23,7 @@ func main() {
 
 	var s string
 
+	var limit int
 	var startTime string
 	var endTime string
 
@@ -149,7 +150,7 @@ func main() {
 		Short: "Manipulation with channels",
 		Long:  `Manipulation with channels: create, delete or update channels`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			s := cmd.GetChannels()
+			s := cmd.GetChannels(limit)
 			fmt.Println(s)
 		},
 	}
@@ -173,7 +174,7 @@ func main() {
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
 			if l == 0 {
-				s = cmd.GetChannels()
+				s = cmd.GetChannels(limit)
 			} else {
 				for i := 0; i < l; i++ {
 					s = s + cmd.GetChannel(args[i])
@@ -449,6 +450,8 @@ func main() {
 	cmdApiKeys.AddCommand(cmdGetApiKeys)
 	cmdApiKeys.AddCommand(cmdUpdateApiKeys)
 
+	cmdChannels.PersistentFlags().IntVarP(
+		&limit, "limit", "l", 0, "limit query parameter")
 	cmdGetMessage.Flags().StringVarP(
 		&startTime, "start", "s", "", "start_time query parameter")
 	cmdGetMessage.Flags().StringVarP(
