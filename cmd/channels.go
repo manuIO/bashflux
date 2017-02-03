@@ -38,8 +38,8 @@ func CreateChannel(msg string) string {
 }
 
 // GetChannels - gets all channels
-func GetChannels() string {
-	url := UrlHTTP + "/channels"
+func GetChannels(limit int) string {
+	url := UrlHTTP + "/channels?climit=" + strconv.Itoa(limit)
 	resp, err := netClient.Get(url)
 	body := GetHttpRespBody(resp, err)
 
@@ -103,6 +103,7 @@ func DeleteAllChannels() string {
 func PlugChannel(id string, devices string) string {
 	url := UrlHTTP + "/channels/" + id + "/plug"
 	sr := strings.NewReader(devices)
+
 
 	body := GetHttpRespBody(netClient.Post(url, "application/json", sr))
 
