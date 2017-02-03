@@ -23,6 +23,9 @@ func main() {
 
 	var s string
 
+	var startTime string
+	var endTime string
+
 	// Set HTTP server address
 	cmd.SetServerAddr(httpHost, httpPort)
 
@@ -251,7 +254,7 @@ func main() {
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
 			if l > 0 {
-				s = cmd.GetMsg(args[0])
+				s = cmd.GetMsg(args[0], startTime, endTime)
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
@@ -445,6 +448,11 @@ func main() {
 	cmdApiKeys.AddCommand(cmdDeleteApiKeys)
 	cmdApiKeys.AddCommand(cmdGetApiKeys)
 	cmdApiKeys.AddCommand(cmdUpdateApiKeys)
+
+	cmdGetMessage.Flags().StringVarP(
+		&startTime, "start", "s", "", "start_time query parameter")
+	cmdGetMessage.Flags().StringVarP(
+		&endTime, "end", "e", "", "end_time query parameter")
 
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatal(err)

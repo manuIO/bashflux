@@ -15,9 +15,10 @@ import (
 )
 
 // GetMsg - gets messages from the channel
-func GetMsg(id string) string {
+func GetMsg(id string, startTime string, endTime string) string {
+	url := UrlHTTP + "/channels/" + id +
+	                 "/msg?start_time=" + startTime + "&end_time=" + endTime
 
-	url := UrlHTTP + "/channels/" + id + "/msg"
 	resp, err := netClient.Get(url)
 	body := GetHttpRespBody(resp, err)
 
