@@ -32,6 +32,7 @@ func main() {
 
 	// Set HTTP server address
 	cmd.SetServerAddr(httpHost, httpPort)
+	cmd.SetAuthServerAddr(authHost, authPort)
 
 	// print mainflux-cli banner
 	fmt.Println(banner)
@@ -301,7 +302,6 @@ func main() {
 		Short: "create <username> <password>",
 		Long:  `Creates new user`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l > 1 {
 				s = cmd.CreateUser(args[0], args[1])
@@ -331,7 +331,6 @@ func main() {
 		Short: "init <username> <password>",
 		Long:  `Creates new session`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l > 1 {
 				s = cmd.LogginInUser(args[0], args[1])
@@ -350,7 +349,6 @@ func main() {
 		Short: "API keys management",
 		Long:  `Get API key`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l == 1 {
 				s = cmd.GetApiKeys(args[0])
@@ -369,7 +367,6 @@ func main() {
 		Short: "apikeys <authorization> <JSON_owner>",
 		Long:  `Get API key`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l == 2 {
 				s = cmd.CreateApiKeys(args[0], args[1])
@@ -388,7 +385,6 @@ func main() {
 		Short: "delete <authorization> <key>",
 		Long:  `Delete API key`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l == 2 {
 				s = cmd.DeleteApiKeys(args[0], args[1])
@@ -407,7 +403,6 @@ func main() {
 		Short: "owner <authorization> <key>",
 		Long:  `Get API key Owner`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l == 2 {
 				s = cmd.GetOwnerApiKeys(args[0], args[1])
@@ -426,7 +421,6 @@ func main() {
 		Short: "update <authorization> <key> <JSON_owner>",
 		Long:  `Get Owner`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l == 3 {
 				s = cmd.UpdateOwnerApiKeys(args[0], args[1], args[2])
