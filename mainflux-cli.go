@@ -45,8 +45,7 @@ func main() {
 		Short: "Server status",
 		Long:  `Mainflux server health checkt.`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			s := cmd.Status()
-			fmt.Println(s)
+			s = cmd.Status()
 		},
 	}
 
@@ -58,8 +57,7 @@ func main() {
 		Short: "Manipulation with devices",
 		Long:  `Manipulation with devices: create, delete or update devices.`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			s := cmd.GetDevices()
-			fmt.Println(s)
+			s = cmd.GetDevices()
 		},
 	}
 
@@ -69,8 +67,7 @@ func main() {
 		Short: "create or create <JSON_device>",
 		Long:  `Creates new device and generates it's UUID`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			s := cmd.CreateDevice("")
-			fmt.Println(s)
+			s = cmd.CreateDevice("")
 		},
 	}
 
@@ -88,7 +85,6 @@ func main() {
 					s = s + cmd.GetDevice(args[i])
 				}
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -110,7 +106,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -126,7 +121,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -142,7 +136,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -154,8 +147,7 @@ func main() {
 		Short: "Manipulation with channels",
 		Long:  `Manipulation with channels: create, delete or update channels`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			s := cmd.GetChannels(limit)
-			fmt.Println(s)
+			s = cmd.GetChannels(limit)
 		},
 	}
 
@@ -166,7 +158,6 @@ func main() {
 		Long:  `Creates new channel and generates it's UUID`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			s = cmd.CreateChannel("")
-			fmt.Println(s)
 		},
 	}
 
@@ -184,7 +175,6 @@ func main() {
 					s = s + cmd.GetChannel(args[i])
 				}
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -200,7 +190,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -222,7 +211,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -238,7 +226,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -263,7 +250,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -279,7 +265,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -292,7 +277,6 @@ func main() {
 		Long:  `Manages users in the system (creation, deletition and other system admin)`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			s = "Usage: " + cmdCobra.Short + ". Needs additional commands (see --help)"
-			fmt.Println(s)
 		},
 	}
 
@@ -308,7 +292,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -321,7 +304,6 @@ func main() {
 		Long:  `Used for creation of sessions for a given clinet (user or device)`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			s = "Usage: " + cmdCobra.Short + ". Need additional commands (see --help)"
-			fmt.Println(s)
 		},
 	}
 
@@ -337,7 +319,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -355,7 +336,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -373,7 +353,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -391,7 +370,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -409,7 +387,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -427,7 +404,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -481,6 +457,8 @@ func main() {
 
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatal(err)
+	} else {
+		fmt.Println(s)
 	}
 }
 
