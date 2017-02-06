@@ -18,8 +18,8 @@ import (
 
 func main() {
 
-	const httpHost = "0.0.0.0"
-	const httpPort = 7070
+	var httpHost = "0.0.0.0"
+	var httpPort = 7070
 
 	const authHost = "0.0.0.0"
 	const authPort = 8180
@@ -29,10 +29,6 @@ func main() {
 	var limit int
 	var startTime string
 	var endTime string
-
-	// Set HTTP server address
-	cmd.SetServerAddr(httpHost, httpPort)
-	cmd.SetAuthServerAddr(authHost, authPort)
 
 	// print mainflux-cli banner
 	fmt.Println(banner)
@@ -407,7 +403,14 @@ func main() {
 		},
 	}
 
-	var rootCmd = &cobra.Command{Use: "maninflux-cli"}
+	var rootCmd = &cobra.Command{
+		Use: "maninflux-cli",
+		PersistentPreRun: func(cmdCobra *cobra.Command, args []string) {
+			// Set HTTP server address
+			cmd.SetServerAddr(httpHost, httpPort)
+			cmd.SetAuthServerAddr(authHost, authPort)
+        },
+	}
 
 	// Root Commands
 	rootCmd.AddCommand(cmdStatus)
@@ -448,8 +451,17 @@ func main() {
 	cmdApiKeys.AddCommand(cmdGetApiKeys)
 	cmdApiKeys.AddCommand(cmdUpdateApiKeys)
 
+	// Root Flags
+	rootCmd.PersistentFlags().StringVarP(
+		&httpHost, "host", "", "0.0.0.0", "HTTP Host address")
+	rootCmd.PersistentFlags().IntVarP(
+		&httpPort, "port", "", 7070, "HTTP Host Port")
+
+	// Channels Flags
 	cmdChannels.PersistentFlags().IntVarP(
 		&limit, "limit", "l", 0, "limit query parameter")
+
+	// Messages Flags
 	cmdGetMessage.Flags().StringVarP(
 		&startTime, "start", "s", "", "start_time query parameter")
 	cmdGetMessage.Flags().StringVarP(
