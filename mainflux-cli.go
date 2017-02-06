@@ -18,8 +18,8 @@ import (
 
 func main() {
 
-	const httpHost = "0.0.0.0"
-	const httpPort = 7070
+	var httpHost = "0.0.0.0"
+	var httpPort = 7070
 
 	const authHost = "0.0.0.0"
 	const authPort = 8180
@@ -29,9 +29,6 @@ func main() {
 	var limit int
 	var startTime string
 	var endTime string
-
-	// Set HTTP server address
-	cmd.SetServerAddr(httpHost, httpPort)
 
 	// print mainflux-cli banner
 	fmt.Println(banner)
@@ -44,8 +41,7 @@ func main() {
 		Short: "Server status",
 		Long:  `Mainflux server health checkt.`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			s := cmd.Status()
-			fmt.Println(s)
+			s = cmd.Status()
 		},
 	}
 
@@ -57,8 +53,7 @@ func main() {
 		Short: "Manipulation with devices",
 		Long:  `Manipulation with devices: create, delete or update devices.`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			s := cmd.GetDevices()
-			fmt.Println(s)
+			s = cmd.GetDevices()
 		},
 	}
 
@@ -68,8 +63,7 @@ func main() {
 		Short: "create or create <JSON_device>",
 		Long:  `Creates new device and generates it's UUID`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			s := cmd.CreateDevice("")
-			fmt.Println(s)
+			s = cmd.CreateDevice("")
 		},
 	}
 
@@ -87,7 +81,6 @@ func main() {
 					s = s + cmd.GetDevice(args[i])
 				}
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -109,7 +102,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -125,7 +117,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -141,7 +132,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -153,8 +143,7 @@ func main() {
 		Short: "Manipulation with channels",
 		Long:  `Manipulation with channels: create, delete or update channels`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			s := cmd.GetChannels(limit)
-			fmt.Println(s)
+			s = cmd.GetChannels(limit)
 		},
 	}
 
@@ -165,7 +154,6 @@ func main() {
 		Long:  `Creates new channel and generates it's UUID`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			s = cmd.CreateChannel("")
-			fmt.Println(s)
 		},
 	}
 
@@ -183,7 +171,6 @@ func main() {
 					s = s + cmd.GetChannel(args[i])
 				}
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -199,7 +186,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -221,7 +207,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -237,7 +222,6 @@ func main() {
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -257,12 +241,11 @@ func main() {
 		Long:  `Gets all messages from a given channel`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
-			if l > 0 {
+			if l == 1 {
 				s = cmd.GetMsg(args[0], startTime, endTime)
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -273,12 +256,11 @@ func main() {
 		Long:  `Sends message on the channel`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
-			if l > 1 {
+			if l == 2 {
 				s = cmd.SendMsg(args[0], args[1])
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -291,7 +273,6 @@ func main() {
 		Long:  `Manages users in the system (creation, deletition and other system admin)`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			s = "Usage: " + cmdCobra.Short + ". Needs additional commands (see --help)"
-			fmt.Println(s)
 		},
 	}
 
@@ -301,14 +282,12 @@ func main() {
 		Short: "create <username> <password>",
 		Long:  `Creates new user`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
-			if l > 1 {
+			if l == 2 {
 				s = cmd.CreateUser(args[0], args[1])
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -321,7 +300,6 @@ func main() {
 		Long:  `Used for creation of sessions for a given clinet (user or device)`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			s = "Usage: " + cmdCobra.Short + ". Need additional commands (see --help)"
-			fmt.Println(s)
 		},
 	}
 
@@ -331,14 +309,12 @@ func main() {
 		Short: "init <username> <password>",
 		Long:  `Creates new session`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
-			if l > 1 {
+			if l == 2 {
 				s = cmd.LogginInUser(args[0], args[1])
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -350,14 +326,12 @@ func main() {
 		Short: "API keys management",
 		Long:  `Get API key`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l == 1 {
 				s = cmd.GetApiKeys(args[0])
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -366,17 +340,15 @@ func main() {
 	////
 	var cmdCreateApiKeys = &cobra.Command{
 		Use:   "create",
-		Short: "apikeys <authorization> <JSON_owner>",
+		Short: "create <authorization> <JSON_owner>",
 		Long:  `Get API key`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l == 2 {
 				s = cmd.CreateApiKeys(args[0], args[1])
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -388,14 +360,12 @@ func main() {
 		Short: "delete <authorization> <key>",
 		Long:  `Delete API key`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l == 2 {
 				s = cmd.DeleteApiKeys(args[0], args[1])
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -407,14 +377,12 @@ func main() {
 		Short: "owner <authorization> <key>",
 		Long:  `Get API key Owner`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l == 2 {
 				s = cmd.GetOwnerApiKeys(args[0], args[1])
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
@@ -426,18 +394,23 @@ func main() {
 		Short: "update <authorization> <key> <JSON_owner>",
 		Long:  `Get Owner`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			cmd.SetServerAddr(authHost, authPort)
 			l := len(args)
 			if l == 3 {
 				s = cmd.UpdateOwnerApiKeys(args[0], args[1], args[2])
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
-			fmt.Println(s)
 		},
 	}
 
-	var rootCmd = &cobra.Command{Use: "maninflux-cli"}
+	var rootCmd = &cobra.Command{
+		Use: "maninflux-cli",
+		PersistentPreRun: func(cmdCobra *cobra.Command, args []string) {
+			// Set HTTP server address
+			cmd.SetServerAddr(httpHost, httpPort)
+			cmd.SetAuthServerAddr(authHost, authPort)
+        },
+	}
 
 	// Root Commands
 	rootCmd.AddCommand(cmdStatus)
@@ -478,8 +451,17 @@ func main() {
 	cmdApiKeys.AddCommand(cmdGetApiKeys)
 	cmdApiKeys.AddCommand(cmdUpdateApiKeys)
 
+	// Root Flags
+	rootCmd.PersistentFlags().StringVarP(
+		&httpHost, "host", "", "0.0.0.0", "HTTP Host address")
+	rootCmd.PersistentFlags().IntVarP(
+		&httpPort, "port", "", 7070, "HTTP Host Port")
+
+	// Channels Flags
 	cmdChannels.PersistentFlags().IntVarP(
 		&limit, "limit", "l", 0, "limit query parameter")
+
+	// Messages Flags
 	cmdGetMessage.Flags().StringVarP(
 		&startTime, "start", "s", "", "start_time query parameter")
 	cmdGetMessage.Flags().StringVarP(
@@ -487,6 +469,8 @@ func main() {
 
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatal(err)
+	} else {
+		fmt.Println(s)
 	}
 }
 

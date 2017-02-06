@@ -21,7 +21,7 @@ func CreateUser(user string, pwd string) string {
 
 	sr := strings.NewReader(msg)
 
-	url := UrlHTTP + "/users"
+	url := UrlAuth + "/users"
 	resp, err := netClient.Post(url, "application/json", sr)
 	if err != nil {
 		return err.Error()
@@ -46,7 +46,7 @@ func LogginInUser(user string, pwd string) string {
 
 	sr := strings.NewReader(msg)
 
-	url := UrlHTTP + "/sessions"
+	url := UrlAuth + "/sessions"
 	resp, err := netClient.Post(url, "application/json", sr)
 	if err != nil {
 		return err.Error()
@@ -66,7 +66,7 @@ func LogginInUser(user string, pwd string) string {
 
 // GetApiKeys - Retrieved a list of created keys
 func GetApiKeys(auth string) string {
-	url := UrlHTTP + "/api-keys"
+	url := UrlAuth + "/api-keys"
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
@@ -84,7 +84,7 @@ func GetApiKeys(auth string) string {
 
 // CreateApiKeys - An API key can be given to the user, device or channel
 func CreateApiKeys(auth string, owner string) string {
-	url := UrlHTTP + "/api-keys"
+	url := UrlAuth + "/api-keys"
 
 	req, err := http.NewRequest("POST", url, strings.NewReader(owner))
 	if err != nil {
@@ -102,7 +102,7 @@ func CreateApiKeys(auth string, owner string) string {
 
 // DeleteApiKeys - Completely removes the key from the API key list
 func DeleteApiKeys(auth string, key string) string {
-	url := UrlHTTP + "/api-keys/" + key
+	url := UrlAuth + "/api-keys/" + key
 
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
@@ -120,7 +120,7 @@ func DeleteApiKeys(auth string, key string) string {
 
 // GetOwnerApiKeys - Get key owner
 func GetOwnerApiKeys(auth string, key string) string {
-	url := UrlHTTP + "/api-keys/" + key
+	url := UrlAuth + "/api-keys/" + key
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return err.Error()
@@ -137,7 +137,7 @@ func GetOwnerApiKeys(auth string, key string) string {
 
 // UpdateOwnerApiKeys - Updates the key scope
 func UpdateOwnerApiKeys(auth string, key string, owner string) string {
-	url := UrlHTTP + "/api-keys/" + key
+	url := UrlAuth + "/api-keys/" + key
 	req, err := http.NewRequest("PUT", url, strings.NewReader(owner))
 	if err != nil {
 		return err.Error()

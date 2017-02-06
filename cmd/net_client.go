@@ -27,8 +27,13 @@ var (
 	}
 
 	UrlHTTP = ""
+	UrlAuth = ""
 )
 
 func SetServerAddr(HTTPHost string, HTTPPort int) {
 	UrlHTTP = "http://" + HTTPHost + ":" + strconv.Itoa(HTTPPort)
+}
+
+func SetAuthServerAddr(AuthHost string, AuthPort int) {
+	UrlAuth = "http://" + AuthHost + ":" + strconv.Itoa(AuthPort)
 }
