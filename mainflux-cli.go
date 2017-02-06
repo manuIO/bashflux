@@ -245,7 +245,7 @@ func main() {
 		Long:  `Gets all messages from a given channel`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
-			if l > 0 {
+			if l == 1 {
 				s = cmd.GetMsg(args[0], startTime, endTime)
 			} else {
 				s = "Usage: " + cmdCobra.Short
@@ -260,7 +260,7 @@ func main() {
 		Long:  `Sends message on the channel`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
-			if l > 1 {
+			if l == 2 {
 				s = cmd.SendMsg(args[0], args[1])
 			} else {
 				s = "Usage: " + cmdCobra.Short
@@ -287,7 +287,7 @@ func main() {
 		Long:  `Creates new user`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
-			if l > 1 {
+			if l == 2 {
 				s = cmd.CreateUser(args[0], args[1])
 			} else {
 				s = "Usage: " + cmdCobra.Short
@@ -314,7 +314,7 @@ func main() {
 		Long:  `Creates new session`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
-			if l > 1 {
+			if l == 2 {
 				s = cmd.LogginInUser(args[0], args[1])
 			} else {
 				s = "Usage: " + cmdCobra.Short
@@ -344,7 +344,7 @@ func main() {
 	////
 	var cmdCreateApiKeys = &cobra.Command{
 		Use:   "create",
-		Short: "apikeys <authorization> <JSON_owner>",
+		Short: "create <authorization> <JSON_owner>",
 		Long:  `Get API key`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			l := len(args)
