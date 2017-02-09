@@ -453,9 +453,9 @@ func main() {
 
 	// Root Flags
 	rootCmd.PersistentFlags().StringVarP(
-		&httpHost, "host", "", "0.0.0.0", "HTTP Host address")
+		&httpHost, "host", "m", "0.0.0.0", "HTTP Host address")
 	rootCmd.PersistentFlags().IntVarP(
-		&httpPort, "port", "", 7070, "HTTP Host Port")
+		&httpPort, "port", "p", 7070, "HTTP Host Port")
 
 	// Channels Flags
 	cmdChannels.PersistentFlags().IntVarP(
