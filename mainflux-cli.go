@@ -21,8 +21,8 @@ func main() {
 	var httpHost = "0.0.0.0"
 	var httpPort = 7070
 
-	const authHost = "0.0.0.0"
-	const authPort = 8180
+	var authHost = "0.0.0.0"
+	var authPort = 8180
 
 	var s string
 
@@ -456,6 +456,10 @@ func main() {
 		&httpHost, "host", "m", "0.0.0.0", "HTTP Host address")
 	rootCmd.PersistentFlags().IntVarP(
 		&httpPort, "port", "p", 7070, "HTTP Host Port")
+	rootCmd.PersistentFlags().StringVarP(
+		&authHost, "ahost", "a", "0.0.0.0", "HTTP Host address")
+	rootCmd.PersistentFlags().IntVarP(
+		&authPort, "aport", "q", 8180, "HTTP Host Port")
 
 	// Channels Flags
 	cmdChannels.PersistentFlags().IntVarP(
