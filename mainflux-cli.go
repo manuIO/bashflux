@@ -14,21 +14,36 @@ import (
 
 	"github.com/mainflux/mainflux-cli/cmd"
 	"github.com/spf13/cobra"
+
+	"github.com/BurntSushi/toml"
 )
 
+// Config struct
+type Config struct {
+	// HTTP
+	HTTPHost string
+	HTTPPort int
+
+	// Auth
+	AuthHost string
+	AuthPort int
+}
+
 func main() {
-
-	var httpHost = "0.0.0.0"
-	var httpPort = 7070
-
-	var authHost = "0.0.0.0"
-	var authPort = 8180
 
 	var s string
 
 	var limit int
 	var startTime string
 	var endTime string
+
+	var confFile = "config.toml"
+	var conf Config
+
+	// Parse conf file
+	if _, err := toml.DecodeFile(confFile, &conf); err != nil {
+		fmt.Println("Error parsing Toml")
+	}
 
 	// print mainflux-cli banner
 	fmt.Println(banner)
@@ -407,8 +422,8 @@ func main() {
 		Use: "maninflux-cli",
 		PersistentPreRun: func(cmdCobra *cobra.Command, args []string) {
 			// Set HTTP server address
-			cmd.SetServerAddr(httpHost, httpPort)
-			cmd.SetAuthServerAddr(authHost, authPort)
+			cmd.SetServerAddr(conf.HTTPHost, conf.HTTPPort)
+			cmd.SetAuthServerAddr(conf.AuthHost, conf.AuthPort)
         },
 	}
 
@@ -453,13 +468,13 @@ func main() {
 
 	// Root Flags
 	rootCmd.PersistentFlags().StringVarP(
-		&httpHost, "host", "m", "0.0.0.0", "HTTP Host address")
+		&conf.HTTPHost, "host", "m", conf.HTTPHost, "HTTP Host address")
 	rootCmd.PersistentFlags().IntVarP(
-		&httpPort, "port", "p", 7070, "HTTP Host Port")
+		&conf.HTTPPort, "port", "p", conf.HTTPPort, "HTTP Host Port")
 	rootCmd.PersistentFlags().StringVarP(
-		&authHost, "ahost", "a", "0.0.0.0", "HTTP Host address")
+		&conf.AuthHost, "ahost", "a", conf.AuthHost, "Auth Host address")
 	rootCmd.PersistentFlags().IntVarP(
-		&authPort, "aport", "q", 8180, "HTTP Host Port")
+		&conf.AuthPort, "aport", "q", conf.AuthPort, "Auth Host Port")
 
 	// Channels Flags
 	cmdChannels.PersistentFlags().IntVarP(
