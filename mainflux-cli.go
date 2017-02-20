@@ -42,7 +42,7 @@ func main() {
 	var conf Config
 
 	conf.HTTPHost = "0.0.0.0"
-	conf.HTTPPort = 7071
+	conf.HTTPPort = 7070
 	conf.AuthHost = "0.0.0.0"
 	conf.AuthPort = 8180
 
