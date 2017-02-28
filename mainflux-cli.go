@@ -38,7 +38,7 @@ func main() {
 	var startTime string
 	var endTime string
 
-	var confFile = "/config.toml"
+	var confFile = "config.toml"
 	var conf Config
 
 	conf.HTTPHost = "0.0.0.0"
@@ -51,7 +51,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		confFile = pwd + confFile
+		confFile = pwd + "/" + confFile
 	}
 
 	// print mainflux-cli banner
