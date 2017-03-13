@@ -87,7 +87,11 @@ func main() {
 		Short: "create or create <JSON_device>",
 		Long:  `Creates new device and generates it's UUID`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			s = cmd.CreateDevice("")
+			var msg = ""
+			if len(args) == 1 {
+				msg = args[0]
+			}
+			s = cmd.CreateDevice(msg)
 		},
 	}
 
@@ -177,7 +181,11 @@ func main() {
 		Short: "create or create <JSON_channel>",
 		Long:  `Creates new channel and generates it's UUID`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			s = cmd.CreateChannel("")
+			var msg = ""
+			if len(args) == 1 {
+				msg = args[0]
+			}
+			s = cmd.CreateChannel(msg)
 		},
 	}
 

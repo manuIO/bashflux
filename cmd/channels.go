@@ -21,7 +21,8 @@ import (
 // CreateChannel - creates new channel and generates UUID
 func CreateChannel(msg string) string {
 	url := UrlHTTP + "/channels"
-	resp, err := netClient.Post(url, "application/json", nil)
+	sr := strings.NewReader(msg)
+	resp, err := netClient.Post(url, "application/json", sr)
 	if err != nil {
 		return err.Error()
 	}
