@@ -20,7 +20,8 @@ import (
 // CreateDevice - creates new device and generates device UUID
 func CreateDevice(msg string) string {
 	url := UrlHTTP + "/devices"
-	resp, err := netClient.Post(url, "application/json", nil)
+	sr := strings.NewReader(msg)
+	resp, err := netClient.Post(url, "application/json", sr)
 	body := GetHttpRespBody(resp, err)
 
 	return GetPrettyJson(body)
