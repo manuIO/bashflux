@@ -27,13 +27,13 @@ func GetPrettyJson(body string) string {
 
 func GetHttpRespBody(rsp *http.Response, err error) string {
 	if err != nil {
-		return err.Error()
+		return `{"error": "` + err.Error() + `"}`
 	}
 	defer rsp.Body.Close()
 
 	body, err := ioutil.ReadAll(rsp.Body)
 	if err != nil {
-		return err.Error()
+		return `{"error": "` + err.Error() + `"}`
 	}
 
 	return string(body)
