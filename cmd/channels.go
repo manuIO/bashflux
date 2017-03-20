@@ -23,19 +23,23 @@ func CreateChannel(msg string) string {
 	url := UrlHTTP + "/channels"
 	sr := strings.NewReader(msg)
 	resp, err := netClient.Post(url, "application/json", sr)
-	if err != nil {
-		return err.Error()
-	}
 	defer resp.Body.Close()
 
-	s := ""
-	if resp.StatusCode == 201 {
-		s = fmt.Sprintf("Created resource %s", resp.Header.Get("Location"))
+	if err != nil {
+		return err.Error()
 	} else {
-		s = http.StatusText(resp.StatusCode)
+		if resp.StatusCode == 201 {
+			return "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
+				   http.StatusText(resp.StatusCode) + "\n\n" +
+				   fmt.Sprintf("Resource location: %s",
+					           resp.Header.Get("Location"))
+		} else {
+			body := GetHttpRespBody(resp, err)
+			return "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
+			       http.StatusText(resp.StatusCode) + "\n\n" +
+				   GetPrettyJson(body)
+		}
 	}
-
-	return s
 }
 
 // GetChannels - gets all channels

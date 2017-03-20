@@ -13,6 +13,7 @@ import (
 	"strconv"
 	"strings"
 	"encoding/json"
+	"fmt"
 
 	"github.com/mainflux/mainflux-core/models"
 )
@@ -22,9 +23,23 @@ func CreateDevice(msg string) string {
 	url := UrlHTTP + "/devices"
 	sr := strings.NewReader(msg)
 	resp, err := netClient.Post(url, "application/json", sr)
-	body := GetHttpRespBody(resp, err)
+	defer resp.Body.Close()
 
-	return GetPrettyJson(body)
+	if err != nil {
+		return err.Error()
+	} else {
+		if resp.StatusCode == 201 {
+			return "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
+				   http.StatusText(resp.StatusCode) + "\n\n" +
+				   fmt.Sprintf("Resource location: %s",
+					           resp.Header.Get("Location"))
+		} else {
+			body := GetHttpRespBody(resp, err)
+			return "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
+			       http.StatusText(resp.StatusCode) + "\n\n" +
+				   GetPrettyJson(body)
+		}
+	}
 }
 
 // GetDevices - gets all devices
@@ -68,14 +83,16 @@ func UpdateDevice(id string, msg string) string {
 func DeleteDevice(id string) string {
 	url := UrlHTTP + "/devices/" + id
 	req, err := http.NewRequest("DELETE", url, nil)
-	if err != nil {
-		return err.Error()
-	}
-
 	resp, err := netClient.Do(req)
 	body := GetHttpRespBody(resp, err)
 
-	return GetPrettyJson(body)
+	if err != nil {
+		return err.Error()
+	} else {
+		return "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
+		       http.StatusText(resp.StatusCode) + "\n\n" +
+			   GetPrettyJson(body)
+	}
 }
 
 // DeleteAllDevices - removes all devices
