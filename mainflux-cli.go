@@ -11,12 +11,9 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/mainflux/mainflux-cli/cmd"
 	"github.com/spf13/cobra"
-
-	"github.com/BurntSushi/toml"
 )
 
 // Config struct
@@ -38,21 +35,12 @@ func main() {
 	var startTime string
 	var endTime string
 
-	var confFile = "config.toml"
 	var conf Config
 
 	conf.HTTPHost = "0.0.0.0"
 	conf.HTTPPort = 7070
 	conf.AuthHost = "0.0.0.0"
 	conf.AuthPort = 8180
-
-	// get current directory location
-	pwd, err := os.Getwd()
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		confFile = pwd + "/" + confFile
-	}
 
 	// print mainflux-cli banner
 	fmt.Println(banner)
@@ -438,11 +426,6 @@ func main() {
 	var rootCmd = &cobra.Command{
 		Use: "maninflux-cli",
 		PersistentPreRun: func(cmdCobra *cobra.Command, args []string) {
-			// Parse conf file
-			if _, err := toml.DecodeFile(confFile, &conf); err != nil {
-				fmt.Println("< ! > Using default configuration")
-				fmt.Println("< ! > " + err.Error() + "\n")
-			}
 			// Set HTTP server address
 			cmd.SetServerAddr(conf.HTTPHost, conf.HTTPPort)
 			cmd.SetAuthServerAddr(conf.AuthHost, conf.AuthPort)
@@ -489,8 +472,6 @@ func main() {
 	cmdApiKeys.AddCommand(cmdUpdateApiKeys)
 
 	// Root Flags
-	rootCmd.PersistentFlags().StringVarP(
-		&confFile, "config", "c", confFile, "Config file path")
 	rootCmd.PersistentFlags().StringVarP(
 		&conf.HTTPHost, "host", "m", conf.HTTPHost, "HTTP Host address")
 	rootCmd.PersistentFlags().IntVarP(
