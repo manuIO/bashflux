@@ -22,3 +22,6 @@ tags
 
 # Binary
 mainflux-cli
+
+# OS X
+.DS_Store
