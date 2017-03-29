@@ -112,7 +112,7 @@ func main() {
 					s = cmd.DeleteAllDevices()
 				} else {
 					for i := 0; i < l; i++ {
-						s = s + cmd.DeleteDevice(args[i])
+						s = s + cmd.DeleteDevice(args[i]) + "\n\n"
 					}
 				}
 			} else {
