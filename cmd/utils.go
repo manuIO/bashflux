@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 
 	"github.com/hokaccha/go-prettyjson"
 )
@@ -36,5 +37,7 @@ func GetHttpRespBody(rsp *http.Response, err error) string {
 		return `{"error": "` + err.Error() + `"}`
 	}
 
-	return string(body)
+	return "Status code: " + strconv.Itoa(rsp.StatusCode) + " - " +
+		   http.StatusText(rsp.StatusCode) + "\n\n" +
+		   GetPrettyJson(string(body))
 }

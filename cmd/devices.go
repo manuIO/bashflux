@@ -27,18 +27,16 @@ func CreateDevice(msg string) string {
 
 	if err != nil {
 		return err.Error()
-	} else {
-		if resp.StatusCode == 201 {
-			return "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
-				   http.StatusText(resp.StatusCode) + "\n\n" +
-				   fmt.Sprintf("Resource location: %s",
+	}
+
+	if resp.StatusCode == 201 {
+		return "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
+			   http.StatusText(resp.StatusCode) + "\n\n" +
+			   fmt.Sprintf("Resource location: %s",
 					           resp.Header.Get("Location"))
-		} else {
-			body := GetHttpRespBody(resp, err)
-			return "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
-			       http.StatusText(resp.StatusCode) + "\n\n" +
-				   GetPrettyJson(body)
-		}
+	} else {
+		body := GetHttpRespBody(resp, err)
+		return body
 	}
 }
 
@@ -48,7 +46,7 @@ func GetDevices() string {
 	resp, err := netClient.Get(url)
 	body := GetHttpRespBody(resp, err)
 
-	return GetPrettyJson(body)
+	return body
 }
 
 // GetDevice - gets device by ID
@@ -57,7 +55,7 @@ func GetDevice(id string) string {
 	resp, err := netClient.Get(url)
 	body := GetHttpRespBody(resp, err)
 
-	return GetPrettyJson(body)
+	return body
 }
 
 // UpdateDevice - updates device by ID
@@ -76,7 +74,7 @@ func UpdateDevice(id string, msg string) string {
 	resp, err := netClient.Do(req)
 	body := GetHttpRespBody(resp, err)
 
-	return GetPrettyJson(body)
+	return body
 }
 
 // DeleteDevice - removes device
@@ -89,9 +87,7 @@ func DeleteDevice(id string) string {
 	if err != nil {
 		return err.Error()
 	} else {
-		return "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
-		       http.StatusText(resp.StatusCode) + "\n\n" +
-			   GetPrettyJson(body)
+		return body
 	}
 }
 
@@ -105,7 +101,7 @@ func DeleteAllDevices() string {
 	json.Unmarshal([]byte(body), &devices)
 	s := ""
 	for i := 0; i < len(devices); i++ {
-		s = s + DeleteDevice(devices[i].ID)
+		s = s + DeleteDevice(devices[i].ID) + "\n\n"
 	}
 
 	return s
@@ -118,5 +114,5 @@ func PlugDevice(id string, channels string) string {
 	rsp, err := netClient.Post(url, "application/json", sr)
 	body := GetHttpRespBody(rsp, err)
 
-	return GetPrettyJson(body)
+	return body
 }

@@ -48,7 +48,7 @@ func GetChannels(limit int) string {
 	resp, err := netClient.Get(url)
 	body := GetHttpRespBody(resp, err)
 
-	return GetPrettyJson(body)
+	return body
 }
 
 // GetChannel - gets channel by ID
@@ -56,7 +56,7 @@ func GetChannel(id string) string {
 	url := UrlHTTP + "/channels/" + id
 	body := GetHttpRespBody(netClient.Get(url))
 
-	return GetPrettyJson(body)
+	return body
 }
 
 // UpdateChannel - publishes SenML message on the channel
@@ -74,7 +74,7 @@ func UpdateChannel(id string, msg string) string {
 
 	body := GetHttpRespBody(netClient.Do(req))
 
-	return GetPrettyJson(body)
+	return body
 }
 
 // DeleteChannel - removes channel
@@ -86,7 +86,7 @@ func DeleteChannel(id string) string {
 	}
 	body := GetHttpRespBody(netClient.Do(req))
 
-	return GetPrettyJson(body)
+	return body
 }
 
 // DeleteAllChannels - removes all channels
@@ -109,8 +109,7 @@ func PlugChannel(id string, devices string) string {
 	url := UrlHTTP + "/channels/" + id + "/plug"
 	sr := strings.NewReader(devices)
 
-
 	body := GetHttpRespBody(netClient.Post(url, "application/json", sr))
 
-	return GetPrettyJson(body)
+	return body
 }
