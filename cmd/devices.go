@@ -23,21 +23,9 @@ func CreateDevice(msg string) string {
 	url := UrlHTTP + "/devices"
 	sr := strings.NewReader(msg)
 	resp, err := netClient.Post(url, "application/json", sr)
-	defer resp.Body.Close()
+	body := GetHttpRespBody(resp, err)
 
-	if err != nil {
-		return err.Error()
-	}
-
-	if resp.StatusCode == 201 {
-		return "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
-			   http.StatusText(resp.StatusCode) + "\n\n" +
-			   fmt.Sprintf("Resource location: %s",
-					           resp.Header.Get("Location"))
-	} else {
-		body := GetHttpRespBody(resp, err)
-		return body
-	}
+	return body
 }
 
 // GetDevices - gets all devices

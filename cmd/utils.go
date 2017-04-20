@@ -37,7 +37,13 @@ func GetHttpRespBody(rsp *http.Response, err error) string {
 		return `{"error": "` + err.Error() + `"}`
 	}
 
-	return "Status code: " + strconv.Itoa(rsp.StatusCode) + " - " +
-		   http.StatusText(rsp.StatusCode) + "\n\n" +
-		   GetPrettyJson(string(body))
+	str := "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
+		   http.StatusText(resp.StatusCode) + "\n\n"
+
+	if resp.StatusCode == 201 {
+		return str + fmt.Sprintf("Resource location: %s",
+			                     resp.Header.Get("Location"))
+	} else {
+		return str + GetPrettyJson(string(body))
+	}
 }
