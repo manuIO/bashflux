@@ -9,11 +9,11 @@
 package cmd
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
 	"encoding/json"
+	"io/ioutil"
 
 	"github.com/mainflux/mainflux-core/models"
 )
@@ -23,23 +23,9 @@ func CreateChannel(msg string) string {
 	url := UrlHTTP + "/channels"
 	sr := strings.NewReader(msg)
 	resp, err := netClient.Post(url, "application/json", sr)
-	defer resp.Body.Close()
+	body := GetHttpRespBody(resp, err)
 
-	if err != nil {
-		return err.Error()
-	} else {
-		if resp.StatusCode == 201 {
-			return "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
-				   http.StatusText(resp.StatusCode) + "\n\n" +
-				   fmt.Sprintf("Resource location: %s",
-					           resp.Header.Get("Location"))
-		} else {
-			body := GetHttpRespBody(resp, err)
-			return "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
-			       http.StatusText(resp.StatusCode) + "\n\n" +
-				   GetPrettyJson(body)
-		}
-	}
+	return body
 }
 
 // GetChannels - gets all channels
@@ -92,13 +78,14 @@ func DeleteChannel(id string) string {
 // DeleteAllChannels - removes all channels
 func DeleteAllChannels() string {
 	url := UrlHTTP + "/channels"
-	body := GetHttpRespBody(netClient.Get(url))
+	resp, _ := netClient.Get(url)
+	body, _ := ioutil.ReadAll(resp.Body)
 
 	var channels []models.Channel
 	json.Unmarshal([]byte(body), &channels)
 	s := ""
 	for i := 0; i < len(channels); i++ {
-		s = s + DeleteChannel(channels[i].ID)
+		s = s + DeleteChannel(channels[i].ID) + "\n\n"
 	}
 
 	return s

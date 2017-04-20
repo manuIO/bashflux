@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"fmt"
 
 	"github.com/hokaccha/go-prettyjson"
 )
@@ -26,13 +27,13 @@ func GetPrettyJson(body string) string {
 	}
 }
 
-func GetHttpRespBody(rsp *http.Response, err error) string {
+func GetHttpRespBody(resp *http.Response, err error) string {
 	if err != nil {
 		return `{"error": "` + err.Error() + `"}`
 	}
-	defer rsp.Body.Close()
+	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(rsp.Body)
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return `{"error": "` + err.Error() + `"}`
 	}

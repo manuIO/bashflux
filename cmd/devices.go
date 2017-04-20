@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"strings"
 	"encoding/json"
-	"fmt"
+	"io/ioutil"
 
 	"github.com/mainflux/mainflux-core/models"
 )
@@ -82,8 +82,8 @@ func DeleteDevice(id string) string {
 // DeleteAllDevices - removes all devices
 func DeleteAllDevices() string {
 	url := UrlHTTP + "/devices"
-	resp, err := netClient.Get(url)
-	body := GetHttpRespBody(resp, err)
+	resp, _ := netClient.Get(url)
+	body, _ := ioutil.ReadAll(resp.Body)
 
 	var devices []models.Device
 	json.Unmarshal([]byte(body), &devices)
