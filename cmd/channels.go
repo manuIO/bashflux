@@ -23,26 +23,26 @@ func CreateChannel(msg string) string {
 	url := UrlHTTP + "/channels"
 	sr := strings.NewReader(msg)
 	resp, err := netClient.Post(url, "application/json", sr)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	return body
+	return s
 }
 
 // GetChannels - gets all channels
 func GetChannels(limit int) string {
 	url := UrlHTTP + "/channels?climit=" + strconv.Itoa(limit)
 	resp, err := netClient.Get(url)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	return body
+	return s
 }
 
 // GetChannel - gets channel by ID
 func GetChannel(id string) string {
 	url := UrlHTTP + "/channels/" + id
-	body := GetHttpRespBody(netClient.Get(url))
+	s := PrettyHttpResp(netClient.Get(url))
 
-	return body
+	return s
 }
 
 // UpdateChannel - publishes SenML message on the channel
@@ -58,9 +58,9 @@ func UpdateChannel(id string, msg string) string {
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Content-Length", strconv.Itoa(len(msg)))
 
-	body := GetHttpRespBody(netClient.Do(req))
+	s := PrettyHttpResp(netClient.Do(req))
 
-	return body
+	return s
 }
 
 // DeleteChannel - removes channel
@@ -70,9 +70,9 @@ func DeleteChannel(id string) string {
 	if err != nil {
 		return err.Error()
 	}
-	body := GetHttpRespBody(netClient.Do(req))
+	s := PrettyHttpResp(netClient.Do(req))
 
-	return body
+	return s
 }
 
 // DeleteAllChannels - removes all channels
@@ -96,7 +96,7 @@ func PlugChannel(id string, devices string) string {
 	url := UrlHTTP + "/channels/" + id + "/plug"
 	sr := strings.NewReader(devices)
 
-	body := GetHttpRespBody(netClient.Post(url, "application/json", sr))
+	s := PrettyHttpResp(netClient.Post(url, "application/json", sr))
 
-	return body
+	return s
 }

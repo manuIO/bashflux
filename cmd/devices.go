@@ -23,27 +23,27 @@ func CreateDevice(msg string) string {
 	url := UrlHTTP + "/devices"
 	sr := strings.NewReader(msg)
 	resp, err := netClient.Post(url, "application/json", sr)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	return body
+	return s
 }
 
 // GetDevices - gets all devices
 func GetDevices() string {
 	url := UrlHTTP + "/devices"
 	resp, err := netClient.Get(url)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	return body
+	return s
 }
 
 // GetDevice - gets device by ID
 func GetDevice(id string) string {
 	url := UrlHTTP + "/devices/" + id
 	resp, err := netClient.Get(url)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	return body
+	return s
 }
 
 // UpdateDevice - updates device by ID
@@ -60,9 +60,9 @@ func UpdateDevice(id string, msg string) string {
 	req.Header.Add("Content-Length", strconv.Itoa(len(msg)))
 
 	resp, err := netClient.Do(req)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	return body
+	return s
 }
 
 // DeleteDevice - removes device
@@ -70,13 +70,9 @@ func DeleteDevice(id string) string {
 	url := UrlHTTP + "/devices/" + id
 	req, err := http.NewRequest("DELETE", url, nil)
 	resp, err := netClient.Do(req)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	if err != nil {
-		return err.Error()
-	} else {
-		return body
-	}
+	return s
 }
 
 // DeleteAllDevices - removes all devices
@@ -100,7 +96,7 @@ func PlugDevice(id string, channels string) string {
 	url := UrlHTTP + "/devices/" + id + "/plug"
 	sr := strings.NewReader(channels)
 	rsp, err := netClient.Post(url, "application/json", sr)
-	body := GetHttpRespBody(rsp, err)
+	s := PrettyHttpResp(rsp, err)
 
-	return body
+	return s
 }

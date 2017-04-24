@@ -14,52 +14,28 @@ import (
 	"strings"
 )
 
-// CreateChannel - creates new channel and generates UUID
+// CreateUser - create user
 func CreateUser(user string, pwd string) string {
 	var err error
+
 	msg := fmt.Sprintf(`{"username": "%s", "password": "%s"}`, user, pwd)
-
 	sr := strings.NewReader(msg)
-
 	url := UrlAuth + "/users"
 	resp, err := netClient.Post(url, "application/json", sr)
-	if err != nil {
-		return err.Error()
-	}
-	defer resp.Body.Close()
-
-	var s = fmt.Sprintf("POST/users: Status %d\n", resp.StatusCode)
-	if resp.StatusCode == 201 {
-		body := GetHttpRespBody(resp, err)
-		s = fmt.Sprintf("%s %s", s, GetPrettyJson(body))
-	} else {
-		s = fmt.Sprintf("%s %s", s, http.StatusText(resp.StatusCode))
-	}
+	s := PrettyHttpResp(resp, err)
 
 	return s
 }
 
-// CreateChannel - creates new channel and generates UUID
+// LogginInUser - loggin in user
 func LogginInUser(user string, pwd string) string {
 	var err error
+
 	msg := fmt.Sprintf(`{"username": "%s", "password": "%s"}`, user, pwd)
-
 	sr := strings.NewReader(msg)
-
 	url := UrlAuth + "/sessions"
 	resp, err := netClient.Post(url, "application/json", sr)
-	if err != nil {
-		return err.Error()
-	}
-	defer resp.Body.Close()
-
-	var s = fmt.Sprintf("POST/sessions: Status %d\n", resp.StatusCode)
-	if resp.StatusCode == 201 {
-		body := GetHttpRespBody(resp, err)
-		s = fmt.Sprintf("%s %s", s, GetPrettyJson(body))
-	} else {
-		s = fmt.Sprintf("%s %s", s, http.StatusText(resp.StatusCode))
-	}
+	s := PrettyHttpResp(resp, err)
 
 	return s
 }
@@ -77,9 +53,9 @@ func GetApiKeys(auth string) string {
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := netClient.Do(req)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	return GetPrettyJson(body)
+	return s
 }
 
 // CreateApiKeys - An API key can be given to the user, device or channel
@@ -95,9 +71,9 @@ func CreateApiKeys(auth string, owner string) string {
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := netClient.Do(req)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	return GetPrettyJson(body)
+	return s
 }
 
 // DeleteApiKeys - Completely removes the key from the API key list
@@ -113,9 +89,9 @@ func DeleteApiKeys(auth string, key string) string {
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := netClient.Do(req)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	return GetPrettyJson(body)
+	return s
 }
 
 // GetOwnerApiKeys - Get key owner
@@ -130,9 +106,9 @@ func GetOwnerApiKeys(auth string, key string) string {
 	req.Header.Set("Content-Type", "application/json")
 
 	resp, err := netClient.Do(req)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	return GetPrettyJson(body)
+	return s
 }
 
 // UpdateOwnerApiKeys - Updates the key scope
@@ -147,7 +123,7 @@ func UpdateOwnerApiKeys(auth string, key string, owner string) string {
 	req.Header.Add("Content-Type", "application/json")
 
 	resp, err := netClient.Do(req)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	return GetPrettyJson(body)
+	return s
 }

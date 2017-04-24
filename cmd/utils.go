@@ -18,7 +18,7 @@ func prettyJSON(b []byte) ([]byte, error) {
 	return out.Bytes(), err
 }
 
-func GetPrettyJson(body string) string {
+func PrettyJson(body string) string {
 	pj, err := prettyjson.Format([]byte(body))
 	if err != nil {
 		return err.Error()
@@ -27,7 +27,7 @@ func GetPrettyJson(body string) string {
 	}
 }
 
-func GetHttpRespBody(resp *http.Response, err error) string {
+func PrettyHttpResp(resp *http.Response, err error) string {
 	if err != nil {
 		return `{"error": "` + err.Error() + `"}`
 	}
@@ -45,6 +45,6 @@ func GetHttpRespBody(resp *http.Response, err error) string {
 		return str + fmt.Sprintf("Resource location: %s",
 			                     resp.Header.Get("Location"))
 	} else {
-		return str + GetPrettyJson(string(body))
+		return str + PrettyJson(string(body))
 	}
 }

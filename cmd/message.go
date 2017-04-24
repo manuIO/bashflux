@@ -17,9 +17,9 @@ func GetMsg(id string, startTime string, endTime string) string {
 	url := UrlHTTP + "/channels/" + id +
 	                 "/msg?start_time=" + startTime + "&end_time=" + endTime
 	resp, err := netClient.Get(url)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	return body
+	return s
 }
 
 // SendMsg - publishes SenML message on the channel
@@ -27,7 +27,7 @@ func SendMsg(id string, msg string) string {
 	url := UrlHTTP + "/channels/" + id + "/msg"
 	sr := strings.NewReader(msg)
 	resp, err := netClient.Post(url, "application/json", sr)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	return body
+	return s
 }
