@@ -506,8 +506,8 @@ var banner = `
 | \_/ | /\ | | | ' | _|| || \/ |> , <__| \_| |_| |
 |_| |_|_||_|_|_|\__|_| |___\__//_/ \_\  \__/___|_|
 
-                == Industrial IoT System ==
-               Made with <3 by Mainflux Team
+           == Industrial IoT System ==
+          Made with <3 by Mainflux Team
 
 [w] http://mainflux.io
 [t] @mainflux
