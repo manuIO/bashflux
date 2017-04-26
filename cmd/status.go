@@ -11,7 +11,7 @@ package cmd
 // Status - server health check
 func Status() string {
 	url := UrlHTTP + "/status"
-	body := GetHttpRespBody(netClient.Get(url))
+	s := PrettyHttpResp(netClient.Get(url))
 
-	return GetPrettyJson(body)
+	return s
 }

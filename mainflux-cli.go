@@ -14,6 +14,7 @@ import (
 
 	"github.com/mainflux/mainflux-cli/cmd"
 	"github.com/spf13/cobra"
+	"github.com/fatih/color"
 )
 
 // Config struct
@@ -43,7 +44,7 @@ func main() {
 	conf.AuthPort = 8180
 
 	// print mainflux-cli banner
-	fmt.Println(banner)
+	color.Yellow(banner)
 
 	////
 	// Status
@@ -112,7 +113,7 @@ func main() {
 					s = cmd.DeleteAllDevices()
 				} else {
 					for i := 0; i < l; i++ {
-						s = s + cmd.DeleteDevice(args[i])
+						s = s + cmd.DeleteDevice(args[i]) + "\n\n"
 					}
 				}
 			} else {
@@ -500,16 +501,15 @@ func main() {
 }
 
 var banner = `
-███╗   ███╗ █████╗ ██╗███╗   ██╗███████╗██╗     ██╗   ██╗██╗  ██╗
-████╗ ████║██╔══██╗██║████╗  ██║██╔════╝██║     ██║   ██║╚██╗██╔╝
-██╔████╔██║███████║██║██╔██╗ ██║█████╗  ██║     ██║   ██║ ╚███╔╝
-██║╚██╔╝██║██╔══██║██║██║╚██╗██║██╔══╝  ██║     ██║   ██║ ██╔██╗
-██║ ╚═╝ ██║██║  ██║██║██║ ╚████║██║     ███████╗╚██████╔╝██╔╝ ██╗
-╚═╝     ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═╝     ╚══════╝ ╚═════╝ ╚═╝  ╚═╝
+ __ __  __  _ __  _ ___ _  _  ___   __   ____   _
+|  V  |/  \| |  \| | __| || || \ \_/ /_ / _/ | | |
+| \_/ | /\ | | | ' | _|| || \/ |> , <__| \_| |_| |
+|_| |_|_||_|_|_|\__|_| |___\__//_/ \_\  \__/___|_|
 
-                == Industrial IoT System ==
-               Made with <3 by Mainflux Team
+           == Industrial IoT System ==
+          Made with <3 by Mainflux Team
 
 [w] http://mainflux.io
 [t] @mainflux
+
 `

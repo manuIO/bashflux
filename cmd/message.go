@@ -9,40 +9,25 @@
 package cmd
 
 import (
-	"fmt"
-	"net/http"
 	"strings"
 )
 
 // GetMsg - gets messages from the channel
 func GetMsg(id string, startTime string, endTime string) string {
-	url := UrlHTTP + "/channels/" + id +
-	                 "/msg?start_time=" + startTime + "&end_time=" + endTime
-
+	url := UrlHTTP + "/msg/" + id +
+	                 "?start_time=" + startTime + "&end_time=" + endTime
 	resp, err := netClient.Get(url)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	return GetPrettyJson(body)
+	return s
 }
 
 // SendMsg - publishes SenML message on the channel
 func SendMsg(id string, msg string) string {
-	var err error
-
-	url := UrlHTTP + "/channels/" + id + "/msg"
+	url := UrlHTTP + "/msg/" + id
 	sr := strings.NewReader(msg)
 	resp, err := netClient.Post(url, "application/json", sr)
-	if err != nil {
-		return err.Error()
-	}
-	defer resp.Body.Close()
-
-	s := ""
-	if resp.StatusCode == 202 {
-		s = fmt.Sprintf("Message sent")
-	} else {
-		s = http.StatusText(resp.StatusCode)
-	}
+	s := PrettyHttpResp(resp, err)
 
 	return s
 }

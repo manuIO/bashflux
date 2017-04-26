@@ -13,7 +13,7 @@ import (
 	"strconv"
 	"strings"
 	"encoding/json"
-	"fmt"
+	"io/ioutil"
 
 	"github.com/mainflux/mainflux-core/models"
 )
@@ -23,41 +23,27 @@ func CreateDevice(msg string) string {
 	url := UrlHTTP + "/devices"
 	sr := strings.NewReader(msg)
 	resp, err := netClient.Post(url, "application/json", sr)
-	defer resp.Body.Close()
+	s := PrettyHttpResp(resp, err)
 
-	if err != nil {
-		return err.Error()
-	} else {
-		if resp.StatusCode == 201 {
-			return "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
-				   http.StatusText(resp.StatusCode) + "\n\n" +
-				   fmt.Sprintf("Resource location: %s",
-					           resp.Header.Get("Location"))
-		} else {
-			body := GetHttpRespBody(resp, err)
-			return "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
-			       http.StatusText(resp.StatusCode) + "\n\n" +
-				   GetPrettyJson(body)
-		}
-	}
+	return s
 }
 
 // GetDevices - gets all devices
 func GetDevices() string {
 	url := UrlHTTP + "/devices"
 	resp, err := netClient.Get(url)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	return GetPrettyJson(body)
+	return s
 }
 
 // GetDevice - gets device by ID
 func GetDevice(id string) string {
 	url := UrlHTTP + "/devices/" + id
 	resp, err := netClient.Get(url)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	return GetPrettyJson(body)
+	return s
 }
 
 // UpdateDevice - updates device by ID
@@ -74,9 +60,9 @@ func UpdateDevice(id string, msg string) string {
 	req.Header.Add("Content-Length", strconv.Itoa(len(msg)))
 
 	resp, err := netClient.Do(req)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	return GetPrettyJson(body)
+	return s
 }
 
 // DeleteDevice - removes device
@@ -84,28 +70,22 @@ func DeleteDevice(id string) string {
 	url := UrlHTTP + "/devices/" + id
 	req, err := http.NewRequest("DELETE", url, nil)
 	resp, err := netClient.Do(req)
-	body := GetHttpRespBody(resp, err)
+	s := PrettyHttpResp(resp, err)
 
-	if err != nil {
-		return err.Error()
-	} else {
-		return "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
-		       http.StatusText(resp.StatusCode) + "\n\n" +
-			   GetPrettyJson(body)
-	}
+	return s
 }
 
 // DeleteAllDevices - removes all devices
 func DeleteAllDevices() string {
 	url := UrlHTTP + "/devices"
-	resp, err := netClient.Get(url)
-	body := GetHttpRespBody(resp, err)
+	resp, _ := netClient.Get(url)
+	body, _ := ioutil.ReadAll(resp.Body)
 
 	var devices []models.Device
 	json.Unmarshal([]byte(body), &devices)
 	s := ""
 	for i := 0; i < len(devices); i++ {
-		s = s + DeleteDevice(devices[i].ID)
+		s = s + DeleteDevice(devices[i].ID) + "\n\n"
 	}
 
 	return s
@@ -116,7 +96,7 @@ func PlugDevice(id string, channels string) string {
 	url := UrlHTTP + "/devices/" + id + "/plug"
 	sr := strings.NewReader(channels)
 	rsp, err := netClient.Post(url, "application/json", sr)
-	body := GetHttpRespBody(rsp, err)
+	s := PrettyHttpResp(rsp, err)
 
-	return GetPrettyJson(body)
+	return s
 }
