@@ -14,8 +14,8 @@ import (
 
 // GetMsg - gets messages from the channel
 func GetMsg(id string, startTime string, endTime string) string {
-	url := UrlHTTP + "/channels/" + id +
-	                 "/msg?start_time=" + startTime + "&end_time=" + endTime
+	url := UrlHTTP + "/msg/" + id +
+	                 "?start_time=" + startTime + "&end_time=" + endTime
 	resp, err := netClient.Get(url)
 	s := PrettyHttpResp(resp, err)
 
@@ -24,7 +24,7 @@ func GetMsg(id string, startTime string, endTime string) string {
 
 // SendMsg - publishes SenML message on the channel
 func SendMsg(id string, msg string) string {
-	url := UrlHTTP + "/channels/" + id + "/msg"
+	url := UrlHTTP + "/msg/" + id
 	sr := strings.NewReader(msg)
 	resp, err := netClient.Post(url, "application/json", sr)
 	s := PrettyHttpResp(resp, err)
