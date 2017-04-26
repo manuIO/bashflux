@@ -44,7 +44,7 @@ func main() {
 	conf.AuthPort = 8180
 
 	// print mainflux-cli banner
-	color.Magenta(banner)
+	color.Yellow(banner)
 
 	////
 	// Status
