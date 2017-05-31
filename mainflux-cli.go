@@ -39,7 +39,7 @@ func main() {
 	var conf Config
 
 	conf.HTTPHost = "0.0.0.0"
-	conf.HTTPPort = 7070
+	conf.HTTPPort = 9090
 	conf.AuthHost = "0.0.0.0"
 	conf.AuthPort = 8180
 
@@ -261,6 +261,8 @@ func main() {
 		Short: "get <channel_id>",
 		Long:  `Gets all messages from a given channel`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
+			// TODO: implement nginx and remove this
+			cmd.SetServerAddr(conf.HTTPHost, 7080)
 			l := len(args)
 			if l == 1 {
 				s = cmd.GetMsg(args[0], startTime, endTime)
@@ -276,6 +278,8 @@ func main() {
 		Short: "send <channel_id> <JSON_string>",
 		Long:  `Sends message on the channel`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
+			// TODO: implement nginx and remove this
+			cmd.SetServerAddr(conf.HTTPHost, 7070)
 			l := len(args)
 			if l == 2 {
 				s = cmd.SendMsg(args[0], args[1])
