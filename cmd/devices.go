@@ -91,9 +91,19 @@ func DeleteAllDevices() string {
 	return s
 }
 
-// CreateDevice - creates new device and generates device UUID
+// PlugDevice - plugs device into a list of channels
 func PlugDevice(id string, channels string) string {
 	url := UrlHTTP + "/devices/" + id + "/plug"
+	sr := strings.NewReader(channels)
+	rsp, err := netClient.Post(url, "application/json", sr)
+	s := PrettyHttpResp(rsp, err)
+
+	return s
+}
+
+// UnplugDevice - unplugs device from a list of channels
+func UnplugDevice(id string, channels string) string {
+	url := UrlHTTP + "/devices/" + id + "/unplug"
 	sr := strings.NewReader(channels)
 	rsp, err := netClient.Post(url, "application/json", sr)
 	s := PrettyHttpResp(rsp, err)

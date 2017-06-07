@@ -137,6 +137,21 @@ func main() {
 		},
 	}
 
+	// Plug Device
+	var cmdUnplugDevice = &cobra.Command{
+		Use:   "unplug",
+		Short: "unplug <device_d> <JSON_channels> ",
+		Long:  `Unplugs device from the channel(s)`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			l := len(args)
+			if l == 2 {
+				s = cmd.UnplugDevice(args[0], args[1])
+			} else {
+				s = "Usage: " + cmdCobra.Short
+			}
+		},
+	}
+
 	// Update Device
 	var cmdUpdateDevice = &cobra.Command{
 		Use:   "update",
@@ -240,6 +255,21 @@ func main() {
 			l := len(args)
 			if l == 2 {
 				s = cmd.PlugChannel(args[0], args[1])
+			} else {
+				s = "Usage: " + cmdCobra.Short
+			}
+		},
+	}
+
+	// Unplug Channel
+	var cmdUnplugChannel = &cobra.Command{
+		Use:   "unplug",
+		Short: "unplug <channel_id> <JSON_device>",
+		Long:  `Unplugs device(s) from the channel`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			l := len(args)
+			if l == 2 {
+				s = cmd.UnplugChannel(args[0], args[1])
 			} else {
 				s = "Usage: " + cmdCobra.Short
 			}
@@ -452,6 +482,7 @@ func main() {
 	cmdDevices.AddCommand(cmdUpdateDevice)
 	cmdDevices.AddCommand(cmdDeleteDevice)
 	cmdDevices.AddCommand(cmdPlugDevice)
+	cmdDevices.AddCommand(cmdUnplugDevice)
 
 	// Channels
 	cmdChannels.AddCommand(cmdCreateChannel)
@@ -459,6 +490,7 @@ func main() {
 	cmdChannels.AddCommand(cmdUpdateChannel)
 	cmdChannels.AddCommand(cmdDeleteChannel)
 	cmdChannels.AddCommand(cmdPlugChannel)
+	cmdChannels.AddCommand(cmdUnplugChannel)
 
 	// Messages
 	cmdMessages.AddCommand(cmdGetMessage)

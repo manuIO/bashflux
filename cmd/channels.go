@@ -100,3 +100,13 @@ func PlugChannel(id string, devices string) string {
 
 	return s
 }
+
+// UnplugChannel - unplugs list of devices from the channel
+func UnplugChannel(id string, devices string) string {
+	url := UrlHTTP + "/channels/" + id + "/unplug"
+	sr := strings.NewReader(devices)
+
+	s := PrettyHttpResp(netClient.Post(url, "application/json", sr))
+
+	return s
+}
