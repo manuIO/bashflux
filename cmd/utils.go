@@ -34,7 +34,8 @@ func PrettyHttpResp(resp *http.Response, err error) string {
 
 	if resp.StatusCode == 201 {
 		return str + fmt.Sprintf("Resource location: %s",
-			                     resp.Header.Get("Location"))
+			                     resp.Header.Get("Location")) + "\n" +
+				 PrettyJson(string(body))
 	} else {
 		return str + PrettyJson(string(body))
 	}

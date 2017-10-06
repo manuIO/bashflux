@@ -9,8 +9,8 @@
 package cmd
 
 // Status - server health check
-func Status() string {
-	url := UrlHTTP + "/status"
+func Version() string {
+	url := UrlHTTP + "/version"
 	s := PrettyHttpResp(netClient.Get(url))
 
 	return s

@@ -10,19 +10,16 @@ package cmd
 
 import (
 	"net/http"
-	"strconv"
 	"strings"
 	"encoding/json"
 	"io/ioutil"
-
-	"github.com/mainflux/mainflux-core/models"
 )
 
-var endPointC = "/channels"
+var endPoint = "/clients"
 
-// CreateChannel - creates new channel and generates UUID
-func CreateChannel(msg string, token string) string {
-	url := UrlHTTP + endPointC
+// CreateClient - creates new client and generates client UUID
+func CreateClient(msg string, token string) string {
+	url := UrlHTTP + endPoint
 	req, err := http.NewRequest("POST", url,  strings.NewReader(msg))
 	if err != nil {
 		return err.Error()
@@ -37,10 +34,10 @@ func CreateChannel(msg string, token string) string {
 	return s
 }
 
-// GetChannels - gets all channels
-func GetChannels(limit int, token string) string {
-	url := UrlHTTP + "/channels?climit=" + strconv.Itoa(limit)
-	req, err := http.NewRequest("GET", url,  nil)
+// GetClients - gets all clients
+func GetClients(token string) string {
+	url := UrlHTTP + endPoint
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return err.Error()
 	}
@@ -54,10 +51,10 @@ func GetChannels(limit int, token string) string {
 	return s
 }
 
-// GetChannel - gets channel by ID
-func GetChannel(id string, token string) string {
-	url := UrlHTTP + "/channels/" + id
-	req, err := http.NewRequest("GET", url,  nil)
+// GetClient - gets client by ID
+func GetClient(id string, token string) string {
+	url := UrlHTTP + endPoint + "/" + id
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return err.Error()
 	}
@@ -71,11 +68,10 @@ func GetChannel(id string, token string) string {
 	return s
 }
 
-// UpdateChannel - publishes SenML message on the channel
-func UpdateChannel(id string, msg string, token string) string {
-	url := UrlHTTP + "/channels/" + id
+// UpdateClient - updates client by ID
+func UpdateClient(id string, msg string, token string) string {
+	url := UrlHTTP + endPoint + "/" + id
 	req, err := http.NewRequest("PUT", url, strings.NewReader(msg))
-
 	if err != nil {
 		return err.Error()
 	}
@@ -89,9 +85,9 @@ func UpdateChannel(id string, msg string, token string) string {
 	return s
 }
 
-// DeleteChannel - removes channel
-func DeleteChannel(id string, token string) string {
-	url := UrlHTTP + "/channels/" + id
+// DeleteClient - removes client
+func DeleteClient(id string, token string) string {
+	url := UrlHTTP + endPoint + "/" + id
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
 		return err.Error()
@@ -106,25 +102,19 @@ func DeleteChannel(id string, token string) string {
 	return s
 }
 
-// DeleteAllChannels - removes all channels
-func DeleteAllChannels(token string) string {
-	url := UrlHTTP + "/channels"
-	req, err := http.NewRequest("GET", url,  nil)
-	if err != nil {
-		return err.Error()
-	}
-
-	req.Header.Set("Authorization", token)
-	req.Header.Add("Content-Type", "application/senml+json")
-
-	resp, err := netClient.Do(req)
+// DeleteAllClients - removes all clients
+func DeleteAllClients(token string) string {
+	url := UrlHTTP + endPoint
+	resp, _ := netClient.Get(url)
 	body, _ := ioutil.ReadAll(resp.Body)
 
-	var channels []models.Channel
-	json.Unmarshal([]byte(body), &channels)
+	var clients []struct{}
+	json.Unmarshal([]byte(body), &clients)
+	println(clients)
 	s := ""
-	for i := 0; i < len(channels); i++ {
-		s = s + DeleteChannel(channels[i].ID, token) + "\n\n"
+	for i := 0; i < len(clients); i++ {
+		println(".")
+		//s = s + DeleteClient(clients[nil, token) + "\n\n"
 	}
 
 	return s
