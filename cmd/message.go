@@ -10,6 +10,7 @@ package cmd
 
 import (
 	"strings"
+	"net/http"
 )
 
 // GetMsg - gets messages from the channel
@@ -23,10 +24,17 @@ func GetMsg(id string, startTime string, endTime string) string {
 }
 
 // SendMsg - publishes SenML message on the channel
-func SendMsg(id string, msg string) string {
+func SendMsg(id string, msg string, token string) string {
 	url := UrlHTTP + "/channels/" + id + "/messages"
-	sr := strings.NewReader(msg)
-	resp, err := netClient.Post(url, "application/json", sr)
+	req, err := http.NewRequest("POST", url, strings.NewReader(msg))
+	if err != nil {
+		return err.Error()
+	}
+
+	req.Header.Set("Authorization", token)
+	req.Header.Add("Content-Type", "application/senml+json")
+
+	resp, err := netClient.Do(req)
 	s := PrettyHttpResp(resp, err)
 
 	return s
