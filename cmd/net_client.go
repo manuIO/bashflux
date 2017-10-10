@@ -26,9 +26,10 @@ var (
 		Transport: netTransport,
 	}
 
-	UrlHTTP = ""
+	serverAddr = ""
 )
 
+// SetServerAddr - set addr using host and port
 func SetServerAddr(HTTPHost string, HTTPPort int) {
-	UrlHTTP = "http://" + HTTPHost + ":" + strconv.Itoa(HTTPPort)
+	serverAddr = "http://" + HTTPHost + ":" + strconv.Itoa(HTTPPort)
 }
