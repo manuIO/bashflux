@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-
-	"github.com/mainflux/mainflux-core/models"
 )
 
 var endPointC = "/channels"
@@ -99,7 +97,7 @@ func DeleteChannel(id string, token string) string {
 
 // DeleteAllChannels - removes all channels
 func DeleteAllChannels(token string) string {
-	url := serverAddr + "/channels"
+	url := serverAddr + endPointC
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return err.Error()
@@ -109,13 +107,25 @@ func DeleteAllChannels(token string) string {
 	req.Header.Add("Content-Type", "application/senml+json")
 
 	resp, err := netClient.Do(req)
-	body, _ := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return `{"error": "` + err.Error() + `"}`
+	}
+	defer resp.Body.Close()
 
-	var channels []models.Channel
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return `{"error": "` + err.Error() + `"}`
+	}
+
+	var channels map[string]interface{}
 	json.Unmarshal([]byte(body), &channels)
+
+	cl := channels["channels"].([]interface{})
+
 	s := ""
-	for i := 0; i < len(channels); i++ {
-		s = s + DeleteChannel(channels[i].ID, token) + "\n\n"
+	for i := 0; i < len(cl); i++ {
+		channel := cl[i].(map[string]interface{})
+		s = s + DeleteChannel(channel["id"].(string), token) + "\n\n"
 	}
 
 	return s

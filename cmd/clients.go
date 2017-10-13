@@ -21,9 +21,8 @@ func CreateClient(msg string, token string) string {
 	req.Header.Add("Content-Type", "application/senml+json")
 
 	resp, err := netClient.Do(req)
-	s := PrettyHTTPResp(resp, err)
 
-	return s
+	return resp
 }
 
 // GetClients - gets all clients
@@ -97,15 +96,34 @@ func DeleteClient(id string, token string) string {
 // DeleteAllClients - removes all clients
 func DeleteAllClients(token string) string {
 	url := serverAddr + endPoint
-	resp, _ := netClient.Get(url)
-	body, _ := ioutil.ReadAll(resp.Body)
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return err.Error()
+	}
 
-	var clients []struct{}
+	req.Header.Set("Authorization", token)
+	req.Header.Add("Content-Type", "application/senml+json")
+
+	resp, err := netClient.Do(req)
+	if err != nil {
+		return `{"error": "` + err.Error() + `"}`
+	}
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return `{"error": "` + err.Error() + `"}`
+	}
+
+	var clients map[string]interface{}
 	json.Unmarshal([]byte(body), &clients)
-	println(clients)
+
+	cl := clients["clients"].([]interface{})
+
 	s := ""
-	for i := 0; i < len(clients); i++ {
-		//s = s + DeleteClient(clients[nil, token) + "\n\n"
+	for i := 0; i < len(cl); i++ {
+		client := cl[i].(map[string]interface{})
+		s = s + DeleteClient(client["id"].(string), token) + "\n\n"
 	}
 
 	return s
