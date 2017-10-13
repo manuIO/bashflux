@@ -1,20 +1,12 @@
-/**
- * Copyright (c) 2016 Mainflux
- *
- * Mainflux server is licensed under an Apache license, version 2.0.
- * All rights not explicitly granted in the Apache license, version 2.0 are reserved.
- * See the included LICENSE file for more details.
- */
-
 package main
 
 import (
 	"fmt"
 	"log"
 
+	"github.com/fatih/color"
 	"github.com/mainflux/mainflux-cli/cmd"
 	"github.com/spf13/cobra"
-	"github.com/fatih/color"
 )
 
 // Config struct
@@ -27,9 +19,7 @@ type Config struct {
 func main() {
 
 	var s string
-
 	var limit int
-
 	var conf Config
 
 	conf.HTTPHost = "0.0.0.0"
@@ -88,10 +78,9 @@ func main() {
 		Short: "get <token> or get <client_id> <token>",
 		Long:  `Gets all clients or Gets clientice by id`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			l := len(args)
-			if l == 1 {
+			if len(args) == 1 {
 				s = cmd.GetClients(args[0])
-			} else if l == 2 {
+			} else if len(args) == 2 {
 				s = s + cmd.GetClient(args[0], args[1])
 			} else {
 				s = "Usage: " + cmdCobra.Short
@@ -105,8 +94,7 @@ func main() {
 		Short: "delete all or delete <client_id>",
 		Long:  `Removes client from DB`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			l := len(args)
-			if l == 2 {
+			if len(args) == 2 {
 				if args[0] == "all" {
 					s = cmd.DeleteAllClients(args[1])
 				} else {
@@ -124,8 +112,7 @@ func main() {
 		Short: "update <client_id> <JSON_string> <token>",
 		Long:  `Update client record`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			l := len(args)
-			if l == 2 {
+			if len(args) == 2 {
 				s = cmd.UpdateClient(args[0], args[1], args[2])
 			} else {
 				s = "Usage: " + cmdCobra.Short
@@ -171,10 +158,9 @@ func main() {
 		Short: "get or get <channel_id>",
 		Long:  `Gets list of all channels or gets channel by id`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			l := len(args)
-			if l == 1 {
+			if len(args) == 1 {
 				s = cmd.GetChannels(limit, args[0])
-			} else if l == 2 {
+			} else if len(args) == 2 {
 				s = s + cmd.GetChannel(args[0], args[1])
 			} else {
 				s = "Usage: " + cmdCobra.Short
@@ -188,8 +174,7 @@ func main() {
 		Short: "update <channel_id> <JSON_string> <token>",
 		Long:  `Updates channel record`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			l := len(args)
-			if l == 3 {
+			if len(args) == 3 {
 				s = cmd.UpdateChannel(args[0], args[1], args[2])
 			} else {
 				s = "Usage: " + cmdCobra.Short
@@ -203,8 +188,7 @@ func main() {
 		Short: "delete <channel_id> <token>",
 		Long:  `Delete channel by ID`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			l := len(args)
-			if l == 2 {
+			if len(args) == 2 {
 				if args[0] == "all" {
 					s = cmd.DeleteAllChannels(args[1])
 				} else {
@@ -222,7 +206,7 @@ func main() {
 	var cmdMessages = &cobra.Command{
 		Use:   "msg",
 		Short: "Send or retrieve messages",
-		Long:  `Send or retrieve messages: controll message flow on the channel`,
+		Long:  `Send or retrieve messages: control message flow on the channel`,
 	}
 
 	// Send Message
@@ -233,8 +217,7 @@ func main() {
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			// TODO: implement nginx and remove this
 			cmd.SetServerAddr(conf.HTTPHost, 7070)
-			l := len(args)
-			if l == 3 {
+			if len(args) == 3 {
 				s = cmd.SendMsg(args[0], args[1], args[2])
 			} else {
 				s = "Usage: " + cmdCobra.Short
@@ -260,8 +243,7 @@ func main() {
 		Short: "create <username> <password>",
 		Long:  `Creates new user`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			l := len(args)
-			if l == 2 {
+			if len(args) == 2 {
 				s = cmd.CreateUser(args[0], args[1])
 			} else {
 				s = "Usage: " + cmdCobra.Short
@@ -287,8 +269,7 @@ func main() {
 		Short: "create <username> <password>",
 		Long:  `Creates new token`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
-			l := len(args)
-			if l == 2 {
+			if len(args) == 2 {
 				s = cmd.CreateToken(args[0], args[1])
 			} else {
 				s = "Usage: " + cmdCobra.Short
@@ -302,7 +283,7 @@ func main() {
 		PersistentPreRun: func(cmdCobra *cobra.Command, args []string) {
 			// Set HTTP server address
 			cmd.SetServerAddr(conf.HTTPHost, conf.HTTPPort)
-        },
+		},
 	}
 
 	// Root Commands
@@ -346,10 +327,10 @@ func main() {
 
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatal(err)
-	} else {
-		fmt.Println(s)
-		fmt.Println("\n")
 	}
+
+	// Print response
+	fmt.Println(s + "\n\n")
 }
 
 var banner = `

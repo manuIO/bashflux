@@ -1,24 +1,26 @@
 package cmd
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
-	"fmt"
 
 	"github.com/hokaccha/go-prettyjson"
 )
 
-func PrettyJson(body string) string {
+// PrettyJSON - JSON pretty print
+func PrettyJSON(body string) string {
 	pj, err := prettyjson.Format([]byte(body))
 	if err != nil {
 		return err.Error()
-	} else {
-		return string(pj)
 	}
+
+	return string(pj)
 }
 
-func PrettyHttpResp(resp *http.Response, err error) string {
+// PrettyHTTPResp - format http response
+func PrettyHTTPResp(resp *http.Response, err error) string {
 	if err != nil {
 		return `{"error": "` + err.Error() + `"}`
 	}
@@ -30,13 +32,13 @@ func PrettyHttpResp(resp *http.Response, err error) string {
 	}
 
 	str := "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
-		   http.StatusText(resp.StatusCode) + "\n\n"
+		http.StatusText(resp.StatusCode) + "\n\n"
 
 	if resp.StatusCode == 201 {
 		return str + fmt.Sprintf("Resource location: %s",
-			                     resp.Header.Get("Location")) + "\n" +
-				 PrettyJson(string(body))
-	} else {
-		return str + PrettyJson(string(body))
+			resp.Header.Get("Location")) + "\n" +
+			PrettyJSON(string(body))
 	}
+
+	return str + PrettyJSON(string(body))
 }
