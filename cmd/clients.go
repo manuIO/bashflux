@@ -21,8 +21,9 @@ func CreateClient(msg string, token string) string {
 	req.Header.Add("Content-Type", "application/senml+json")
 
 	resp, err := netClient.Do(req)
+	s := PrettyHTTPResp(resp, err)
 
-	return resp
+	return s
 }
 
 // GetClients - gets all clients
