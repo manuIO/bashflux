@@ -118,14 +118,14 @@ func DeleteAllClients(token string) string {
 		return `{"error": "` + err.Error() + `"}`
 	}
 
-	var clients struct {
-		List []manager.Client `json:"clients,omitempty"`
+	var list struct {
+		Clients []manager.Client `json:"clients,omitempty"`
 	}
-	json.Unmarshal([]byte(body), &clients)
+	json.Unmarshal([]byte(body), &list)
 
 	s := ""
-	for i := 0; i < len(clients.List); i++ {
-		s = s + DeleteClient(clients.List[i].ID, token) + "\n\n"
+	for i := 0; i < len(list.Clients); i++ {
+		s = s + DeleteClient(list.Clients[i].ID, token) + "\n\n"
 	}
 
 	return s
