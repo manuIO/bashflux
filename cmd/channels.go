@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/mainflux/mainflux/manager"
 )
 
 var endPointC = "/channels"
@@ -117,15 +119,14 @@ func DeleteAllChannels(token string) string {
 		return `{"error": "` + err.Error() + `"}`
 	}
 
-	var channels map[string]interface{}
+	var channels struct {
+		List []manager.Channel `json:"channels,omitempty"`
+	}
 	json.Unmarshal([]byte(body), &channels)
 
-	cl := channels["channels"].([]interface{})
-
 	s := ""
-	for i := 0; i < len(cl); i++ {
-		channel := cl[i].(map[string]interface{})
-		s = s + DeleteChannel(channel["id"].(string), token) + "\n\n"
+	for i := 0; i < len(channels.List); i++ {
+		s = s + DeleteChannel(channels.List[i].ID, token) + "\n\n"
 	}
 
 	return s
