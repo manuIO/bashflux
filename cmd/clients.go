@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
+
+	"github.com/mainflux/mainflux/manager"
 )
 
 var endPoint = "/clients"
@@ -116,15 +118,14 @@ func DeleteAllClients(token string) string {
 		return `{"error": "` + err.Error() + `"}`
 	}
 
-	var clients map[string]interface{}
-	json.Unmarshal([]byte(body), &clients)
-
-	cl := clients["clients"].([]interface{})
+	var list struct {
+		Clients []manager.Client `json:"clients,omitempty"`
+	}
+	json.Unmarshal([]byte(body), &list)
 
 	s := ""
-	for i := 0; i < len(cl); i++ {
-		client := cl[i].(map[string]interface{})
-		s = s + DeleteClient(client["id"].(string), token) + "\n\n"
+	for i := 0; i < len(list.Clients); i++ {
+		s = s + DeleteClient(list.Clients[i].ID, token) + "\n\n"
 	}
 
 	return s
