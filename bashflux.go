@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/fatih/color"
-	"github.com/mainflux/mainflux-cli/cmd"
+	"github.com/mainflux/bashflux/cmd"
 	"github.com/spf13/cobra"
 )
 
