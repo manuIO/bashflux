@@ -21,7 +21,7 @@ Session.vim
 tags
 
 # Binary
-mainflux-cli
+bashflux
 
 # OS X
 .DS_Store
