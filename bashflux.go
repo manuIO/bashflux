@@ -25,7 +25,7 @@ func main() {
 	conf.HTTPHost = "0.0.0.0"
 	conf.HTTPPort = 8180
 
-	// print mainflux-cli banner
+	// print bashflux banner
 	color.Yellow(banner)
 
 	////
@@ -59,8 +59,8 @@ func main() {
 	// Create Client
 	var cmdCreateClient = &cobra.Command{
 		Use:   "create",
-		Short: "create or create <JSON_client> <token>",
-		Long:  `Creates new client and generates it's UUID`,
+		Short: "create <JSON_client> <token>",
+		Long:  `Create new client, generate his UUID and store it`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			if len(args) == 2 {
 				msg := args[0]
@@ -76,7 +76,7 @@ func main() {
 	var cmdGetClient = &cobra.Command{
 		Use:   "get",
 		Short: "get <token> or get <client_id> <token>",
-		Long:  `Gets all clients or Gets clientice by id`,
+		Long:  `Get all clients or client by id`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			if len(args) == 1 {
 				s = cmd.GetClients(args[0])
@@ -91,8 +91,8 @@ func main() {
 	// Delete Client
 	var cmdDeleteClient = &cobra.Command{
 		Use:   "delete",
-		Short: "delete all or delete <client_id>",
-		Long:  `Removes client from DB`,
+		Short: "delete all or delete <client_id> <token>",
+		Long:  `Removes client from database`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			if len(args) == 2 {
 				if args[0] == "all" {
@@ -139,7 +139,7 @@ func main() {
 	// Create Channel
 	var cmdCreateChannel = &cobra.Command{
 		Use:   "create",
-		Short: "create or create <JSON_channel>",
+		Short: "create <JSON_channel> <token>",
 		Long:  `Creates new channel and generates it's UUID`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			if len(args) == 2 {
@@ -155,7 +155,7 @@ func main() {
 	// Get Channel
 	var cmdGetChannel = &cobra.Command{
 		Use:   "get",
-		Short: "get or get <channel_id>",
+		Short: "get <token>or get <channel_id>",
 		Long:  `Gets list of all channels or gets channel by id`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			if len(args) == 1 {
@@ -279,7 +279,7 @@ func main() {
 
 	// Root
 	var rootCmd = &cobra.Command{
-		Use: "maninflux-cli",
+		Use: "bashflux",
 		PersistentPreRun: func(cmdCobra *cobra.Command, args []string) {
 			// Set HTTP server address
 			cmd.SetServerAddr(conf.HTTPHost, conf.HTTPPort)
@@ -333,16 +333,12 @@ func main() {
 	fmt.Println(s + "\n\n")
 }
 
-var banner = `
- __ __  __  _ __  _ ___ _  _  ___   __   ____   _
-|  V  |/  \| |  \| | __| || || \ \_/ /_ / _/ | | |
-| \_/ | /\ | | | ' | _|| || \/ |> , <__| \_| |_| |
-|_| |_|_||_|_|_|\__|_| |___\__//_/ \_\  \__/___|_|
+var banner =
+` __                 __     ___ __
+|  |--.---.-.-----.|  |--.'  _|  |.--.--.--.--.
+|  _  |  _  |__ --||     |   _|  ||  |  |_   _|
+|_____|___._|_____||__|__|__| |__||_____|__.__|
 
-           == Industrial IoT System ==
-          Made with <3 by Mainflux Team
-
-[w] http://mainflux.io
-[t] @mainflux
+             == Mainflux CLI ==
 
 `
