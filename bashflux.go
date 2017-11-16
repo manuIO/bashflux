@@ -29,11 +29,11 @@ func main() {
 	color.Yellow(banner)
 
 	////
-	// Status
+	// Version
 	////
-	var cmdStatus = &cobra.Command{
+	var cmdVersion= &cobra.Command{
 		Use:   "version",
-		Short: "Service version",
+		Short: "Get manager version",
 		Long:  `Mainflux server health checkt.`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			s = cmd.Version()
@@ -59,7 +59,7 @@ func main() {
 	// Create Client
 	var cmdCreateClient = &cobra.Command{
 		Use:   "create",
-		Short: "create <JSON_client> <token>",
+		Short: "create <JSON_client> <user_token>",
 		Long:  `Create new client, generate his UUID and store it`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			if len(args) == 2 {
@@ -75,7 +75,7 @@ func main() {
 	// Get Client
 	var cmdGetClient = &cobra.Command{
 		Use:   "get",
-		Short: "get <token> or get <client_id> <token>",
+		Short: "get <user_token> or get <client_id> <user_token>",
 		Long:  `Get all clients or client by id`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			if len(args) == 1 {
@@ -91,7 +91,7 @@ func main() {
 	// Delete Client
 	var cmdDeleteClient = &cobra.Command{
 		Use:   "delete",
-		Short: "delete all or delete <client_id> <token>",
+		Short: "delete all or delete <client_id> <user_token>",
 		Long:  `Removes client from database`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			if len(args) == 2 {
@@ -109,7 +109,7 @@ func main() {
 	// Update Client
 	var cmdUpdateClient = &cobra.Command{
 		Use:   "update",
-		Short: "update <client_id> <JSON_string> <token>",
+		Short: "update <client_id> <JSON_string> <user_token>",
 		Long:  `Update client record`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			if len(args) == 2 {
@@ -139,7 +139,7 @@ func main() {
 	// Create Channel
 	var cmdCreateChannel = &cobra.Command{
 		Use:   "create",
-		Short: "create <JSON_channel> <token>",
+		Short: "create <JSON_channel> <user_token>",
 		Long:  `Creates new channel and generates it's UUID`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			if len(args) == 2 {
@@ -155,7 +155,7 @@ func main() {
 	// Get Channel
 	var cmdGetChannel = &cobra.Command{
 		Use:   "get",
-		Short: "get <token>or get <channel_id>",
+		Short: "get <user_token> or get <channel_id> <user_token>",
 		Long:  `Gets list of all channels or gets channel by id`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			if len(args) == 1 {
@@ -171,7 +171,7 @@ func main() {
 	// Update Channel
 	var cmdUpdateChannel = &cobra.Command{
 		Use:   "update",
-		Short: "update <channel_id> <JSON_string> <token>",
+		Short: "update <channel_id> <JSON_string> <user_token>",
 		Long:  `Updates channel record`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			if len(args) == 3 {
@@ -185,7 +185,7 @@ func main() {
 	// Delete Channel
 	var cmdDeleteChannel = &cobra.Command{
 		Use:   "delete",
-		Short: "delete <channel_id> <token>",
+		Short: "delete <channel_id> <user_token>",
 		Long:  `Delete channel by ID`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			if len(args) == 2 {
@@ -212,7 +212,7 @@ func main() {
 	// Send Message
 	var cmdSendMessage = &cobra.Command{
 		Use:   "send",
-		Short: "send <channel_id> <JSON_string> <token>",
+		Short: "send <channel_id> <JSON_string> <user_token>",
 		Long:  `Sends message on the channel`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			// TODO: implement nginx and remove this
@@ -287,7 +287,7 @@ func main() {
 	}
 
 	// Root Commands
-	rootCmd.AddCommand(cmdStatus)
+	rootCmd.AddCommand(cmdVersion)
 	rootCmd.AddCommand(cmdClients)
 	rootCmd.AddCommand(cmdChannels)
 	rootCmd.AddCommand(cmdMessages)
