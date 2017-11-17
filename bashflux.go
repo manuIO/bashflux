@@ -120,6 +120,20 @@ func main() {
 		},
 	}
 
+	// Identity
+	var cmdGetIdentity= &cobra.Command{
+		Use:   "identity",
+		Short: "identity <client_key>",
+		Long:  `Retrieves Client ID for a given client token`,
+		Run: func(cmdCobra *cobra.Command, args []string) {
+			if len(args) == 1 {
+				s = cmd.GetIdentity(args[0])
+			} else {
+				s = "Usage: " + cmdCobra.Short
+			}
+		},
+	}
+
 	////
 	// Channels
 	////
@@ -299,6 +313,7 @@ func main() {
 	cmdClients.AddCommand(cmdGetClient)
 	cmdClients.AddCommand(cmdUpdateClient)
 	cmdClients.AddCommand(cmdDeleteClient)
+	cmdClients.AddCommand(cmdGetIdentity)
 
 	// Channels
 	cmdChannels.AddCommand(cmdCreateChannel)
