@@ -1,5 +1,5 @@
-hash: 4dcc3a06a49ff32c384bc8f14b938bf3de8b630e5390321312ed5411a0779d70
-updated: 2017-10-25T12:03:11.660688236+02:00
+hash: ad350f2c2ebda1acc8f987dce8b8152baabb0891e1b2e90f9c58bb88531a99b1
+updated: 2017-11-16T16:18:17.421515125+01:00
 imports:
 - name: github.com/asaskevich/govalidator
   version: 73945b6115bfbbcc57d89b7316e28109364124e1
@@ -20,9 +20,9 @@ imports:
   version: 57fdcb988a5c543893cc61bce354a6e24ab70022
   repo: https://github.com/mattn/go-isatty
 - name: github.com/spf13/cobra
-  version: 7b2c5ac9fc04fc5efafb60700713d4fa609b777b
+  version: 2da4a54c5ceefcee7ca5dd0eea1e18a3b6366489
 - name: github.com/spf13/pflag
-  version: 97afa5e7ca8a08a383cb259e06636b5e2cc7897f
+  version: 4c012f6dcd9546820e378d0bdda4d8fc772cdfea
 - name: golang.org/x/sys
   version: e24f485414aeafb646f6fca458b0bf869c0880a1
   repo: https://go.googlesource.com/sys

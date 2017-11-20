@@ -130,3 +130,20 @@ func DeleteAllClients(token string) string {
 
 	return s
 }
+
+// GetIdentity - retrieves client ID for a given client token
+func GetIdentity(key string) string {
+	url := serverAddr + "/identity"
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return err.Error()
+	}
+
+	req.Header.Set("Authorization", key)
+	req.Header.Add("Content-Type", "application/senml+json")
+
+	resp, err := netClient.Do(req)
+	s := PrettyHTTPResp(resp, err)
+
+	return s
+}
