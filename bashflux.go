@@ -226,7 +226,7 @@ func main() {
 	// Send Message
 	var cmdSendMessage = &cobra.Command{
 		Use:   "send",
-		Short: "send <channel_id> <JSON_string> <user_token>",
+		Short: "send <channel_id> <JSON_string> <client_token>",
 		Long:  `Sends message on the channel`,
 		Run: func(cmdCobra *cobra.Command, args []string) {
 			// TODO: implement nginx and remove this
