@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -34,11 +33,13 @@ func PrettyHTTPResp(resp *http.Response, err error) string {
 	str := "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
 		http.StatusText(resp.StatusCode) + "\n\n"
 
-	if resp.StatusCode == 201 {
-		return str + fmt.Sprintf("Resource location: %s",
-			resp.Header.Get("Location")) + "\n" +
-			PrettyJSON(string(body))
+	if len(resp.Header.Get("Location")) != 0 {
+		str = str + "Resource location: " + resp.Header.Get("Location")
 	}
 
-	return str + PrettyJSON(string(body))
+	if len(body) != 0 {
+		str = str + "\n" + PrettyJSON(string(body))
+	}
+
+	return str
 }
