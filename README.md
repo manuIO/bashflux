@@ -34,7 +34,7 @@ bashflux
 if `$GOBIN` is in `$PATH` (otherwise use `$GOBIN/bashflux`)
 
 ### Documentation
-Development documentation can be found [here](http://http://mainflux.readthedocs.io/en/latest/).
+Development documentation can be found [here](http://mainflux.readthedocs.io/en/latest/).
 
 ### Community
 #### Mailing lists
