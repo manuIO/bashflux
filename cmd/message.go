@@ -1,33 +1,43 @@
 package cmd
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
+
+	"github.com/spf13/cobra"
 )
 
-// GetMsg - gets messages from the channel
-func GetMsg(id string, startTime string, endTime string) string {
-	url := serverAddr + "/channels/" + id + "/messages" +
-		"?start_time=" + startTime + "&end_time=" + endTime
-	resp, err := netClient.Get(url)
-	s := PrettyHTTPResp(resp, err)
+var CmdMessages = &cobra.Command{
+	Use:   "msg",
+	Short: "Send or retrieve messages",
+	Long:  `Send or retrieve messages: control message flow on the channel`,
+}
 
-	return s
+var CmdSendMessage = &cobra.Command{
+	Use:   "send",
+	Short: "send <channel_id> <JSON_string> <client_token>",
+	Long:  `Sends message on the channel`,
+	Run: func(cmdCobra *cobra.Command, args []string) {
+		if len(args) == 3 {
+			SendMsg(args[0], args[1], args[2])
+		} else {
+			LogUsage(cmdCobra.Short)
+		}
+	},
 }
 
 // SendMsg - publishes SenML message on the channel
-func SendMsg(id string, msg string, token string) string {
+func SendMsg(id string, msg string, token string) {
 	url := serverAddr + "/channels/" + id + "/messages"
 	req, err := http.NewRequest("POST", url, strings.NewReader(msg))
 	if err != nil {
-		return err.Error()
+		fmt.Println(err.Error() + "\n")
 	}
 
 	req.Header.Set("Authorization", token)
 	req.Header.Add("Content-Type", "application/senml+json")
 
-	resp, err := netClient.Do(req)
-	s := PrettyHTTPResp(resp, err)
-
-	return s
+	resp, err := httpClient.Do(req)
+	FormatResLog(resp, err)
 }

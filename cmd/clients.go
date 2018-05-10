@@ -2,120 +2,191 @@ package cmd
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/mainflux/mainflux/manager"
+	"github.com/spf13/cobra"
 )
 
-var endPoint = "/clients"
+var cliEndPoint = "clients"
+
+var CmdClients = &cobra.Command{
+	Use:   "clients",
+	Short: "clients <options>",
+	Long:  `Clients handling: create, delete or update clients.`,
+	Run: func(cmdCobra *cobra.Command, args []string) {
+		if len(args) == 1 {
+			GetClients(args[0])
+		} else {
+			LogUsage(cmdCobra.Short)
+		}
+	},
+}
+
+var CmdCreateClient = &cobra.Command{
+	Use:   "create",
+	Short: "create device/<JSON_client> <user_auth_token>",
+	Long:  `Create new client, generate his UUID and store it`,
+	Run: func(cmdCobra *cobra.Command, args []string) {
+		if len(args) == 2 {
+			msg := args[0]
+			token := args[1]
+			CreateClient(msg, token)
+		} else {
+			LogUsage(cmdCobra.Short)
+		}
+	},
+}
+
+var CmdGetClient = &cobra.Command{
+	Use:   "get",
+	Short: "get <user_auth_token> or get <client_id> <user_auth_token>",
+	Long:  `Get all clients or client by id`,
+	Run: func(cmdCobra *cobra.Command, args []string) {
+		if len(args) == 1 {
+			GetClients(args[0])
+		} else if len(args) == 2 {
+			GetClient(args[0], args[1])
+		} else {
+			LogUsage(cmdCobra.Short)
+		}
+	},
+}
+
+var CmdDeleteClient = &cobra.Command{
+	Use:   "delete",
+	Short: "delete all/<client_id> <user_auth_token>",
+	Long:  `Removes client from database`,
+	Run: func(cmdCobra *cobra.Command, args []string) {
+		if len(args) == 2 {
+			if args[0] == "all" {
+				DeleteAllClients(args[1])
+			} else {
+				DeleteClient(args[0], args[1])
+			}
+		} else {
+			LogUsage(cmdCobra.Short)
+		}
+	},
+}
+
+var CmdUpdateClient = &cobra.Command{
+	Use:   "update",
+	Short: "update <client_id> <JSON_string> <user_auth_token>",
+	Long:  `Update client record`,
+	Run: func(cmdCobra *cobra.Command, args []string) {
+		if len(args) == 3 {
+			UpdateClient(args[0], args[1], args[2])
+		} else {
+			LogUsage(cmdCobra.Short)
+		}
+	},
+}
+
+var CmdConnectClient = &cobra.Command{
+	Use:   "connect",
+	Short: "connect <client_id> <channel_id> <user_auth_token>",
+	Long:  `Connect client to the channel`,
+	Run: func(cmdCobra *cobra.Command, args []string) {
+		if len(args) != 3 {
+			LogUsage(cmdCobra.Short)
+		}
+		ConnectClient(args[0], args[1], args[2])
+	},
+}
+
+var CmdDisconnectClient = &cobra.Command{
+	Use:   "disconnect",
+	Short: "disconnect <client_id> <channel_id> <user_auth_token>",
+	Long:  `Disconnect client to the channel`,
+	Run: func(cmdCobra *cobra.Command, args []string) {
+		if len(args) != 3 {
+			LogUsage(cmdCobra.Short)
+		}
+		DisconnectClient(args[0], args[1], args[2])
+	},
+}
 
 // CreateClient - creates new client and generates client UUID
-func CreateClient(msg string, token string) string {
-	url := serverAddr + endPoint
+func CreateClient(msg, token string) {
+	url := fmt.Sprintf("%s/%s", serverAddr, cliEndPoint)
 	req, err := http.NewRequest("POST", url, strings.NewReader(msg))
 	if err != nil {
-		return err.Error()
+		fmt.Println(err.Error() + "\n")
 	}
 
-	req.Header.Set("Authorization", token)
-	req.Header.Add("Content-Type", "application/senml+json")
-
-	resp, err := netClient.Do(req)
-	s := PrettyHTTPResp(resp, err)
-
-	return s
+	GetReqResp(req, token)
 }
 
 // GetClients - gets all clients
-func GetClients(token string) string {
-	url := serverAddr + endPoint
+func GetClients(token string) {
+	url := fmt.Sprintf("%s/%s?offset=%s&limit=%s",
+		serverAddr, cliEndPoint, strconv.Itoa(Offset), strconv.Itoa(Limit))
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return err.Error()
+		fmt.Println(err.Error() + "\n")
 	}
 
-	req.Header.Set("Authorization", token)
-	req.Header.Add("Content-Type", "application/senml+json")
-
-	resp, err := netClient.Do(req)
-	s := PrettyHTTPResp(resp, err)
-
-	return s
+	GetReqResp(req, token)
 }
 
 // GetClient - gets client by ID
-func GetClient(id string, token string) string {
-	url := serverAddr + endPoint + "/" + id
+func GetClient(id, token string) {
+	url := fmt.Sprintf("%s/%s/%s", serverAddr, cliEndPoint, id)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return err.Error()
+		fmt.Println(err.Error() + "\n")
 	}
 
-	req.Header.Set("Authorization", token)
-	req.Header.Add("Content-Type", "application/senml+json")
-
-	resp, err := netClient.Do(req)
-	s := PrettyHTTPResp(resp, err)
-
-	return s
+	GetReqResp(req, token)
 }
 
 // UpdateClient - updates client by ID
-func UpdateClient(id string, msg string, token string) string {
-	url := serverAddr + endPoint + "/" + id
+func UpdateClient(id, msg, token string) {
+	url := fmt.Sprintf("%s/%s/%s", serverAddr, cliEndPoint, id)
 	req, err := http.NewRequest("PUT", url, strings.NewReader(msg))
 	if err != nil {
-		return err.Error()
+		fmt.Println(err.Error() + "\n")
 	}
 
-	req.Header.Set("Authorization", token)
-	req.Header.Add("Content-Type", "application/senml+json")
-
-	resp, err := netClient.Do(req)
-	s := PrettyHTTPResp(resp, err)
-
-	return s
+	GetReqResp(req, token)
 }
 
 // DeleteClient - removes client
-func DeleteClient(id string, token string) string {
-	url := serverAddr + endPoint + "/" + id
+func DeleteClient(id, token string) {
+	url := fmt.Sprintf("%s/%s/%s", serverAddr, cliEndPoint, id)
 	req, err := http.NewRequest("DELETE", url, nil)
 	if err != nil {
-		return err.Error()
+		fmt.Println(err.Error() + "\n")
 	}
 
-	req.Header.Set("Authorization", token)
-	req.Header.Add("Content-Type", "application/senml+json")
-
-	resp, err := netClient.Do(req)
-	s := PrettyHTTPResp(resp, err)
-
-	return s
+	GetReqResp(req, token)
 }
 
 // DeleteAllClients - removes all clients
-func DeleteAllClients(token string) string {
-	url := serverAddr + endPoint
+func DeleteAllClients(token string) {
+	url := fmt.Sprintf("%s/%s", serverAddr, cliEndPoint)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return err.Error()
+		fmt.Println(err.Error() + "\n")
 	}
 
 	req.Header.Set("Authorization", token)
-	req.Header.Add("Content-Type", "application/senml+json")
+	req.Header.Add("Content-Type", contentType)
 
-	resp, err := netClient.Do(req)
+	resp, err := httpClient.Do(req)
 	if err != nil {
-		return `{"error": "` + err.Error() + `"}`
+		fmt.Println(err.Error() + "\n")
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return `{"error": "` + err.Error() + `"}`
+		fmt.Println(err.Error() + "\n")
 	}
 
 	var list struct {
@@ -123,27 +194,32 @@ func DeleteAllClients(token string) string {
 	}
 	json.Unmarshal([]byte(body), &list)
 
-	s := ""
 	for i := 0; i < len(list.Clients); i++ {
-		s = s + DeleteClient(list.Clients[i].ID, token) + "\n\n"
+		DeleteClient(list.Clients[i].ID, token)
+		fmt.Println("\n\n")
 	}
-
-	return s
 }
 
-// GetIdentity - retrieves client ID for a given client token
-func GetIdentity(key string) string {
-	url := serverAddr + "/identity"
-	req, err := http.NewRequest("GET", url, nil)
+// ConnectClient - connect client to a channel
+func ConnectClient(cliId, chanId, token string) {
+	url := fmt.Sprintf("%s/%s/%s/%s/%s", serverAddr, chanEndPoint,
+		chanId, cliEndPoint, cliId)
+	req, err := http.NewRequest("PUT", url, nil)
 	if err != nil {
-		return err.Error()
+		fmt.Println(err.Error() + "\n")
 	}
 
-	req.Header.Set("Authorization", key)
-	req.Header.Add("Content-Type", "application/senml+json")
+	GetReqResp(req, token)
+}
 
-	resp, err := netClient.Do(req)
-	s := PrettyHTTPResp(resp, err)
+// DisconnectClient - connect client to a channel
+func DisconnectClient(cliId, chanId, token string) {
+	url := fmt.Sprintf("%s/%s/%s/%s/%s", serverAddr, chanEndPoint,
+		chanId, cliEndPoint, cliId)
+	req, err := http.NewRequest("DELETE", url, nil)
+	if err != nil {
+		fmt.Println(err.Error() + "\n")
+	}
 
-	return s
+	GetReqResp(req, token)
 }

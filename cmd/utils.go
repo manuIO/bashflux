@@ -1,45 +1,61 @@
 package cmd
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 
+	"github.com/fatih/color"
 	"github.com/hokaccha/go-prettyjson"
 )
 
-// PrettyJSON - JSON pretty print
-func PrettyJSON(body string) string {
-	pj, err := prettyjson.Format([]byte(body))
-	if err != nil {
-		return err.Error()
-	}
+const contentType = "application/json"
 
-	return string(pj)
+var Limit = 10
+var Offset = 0
+
+func GetReqResp(req *http.Request, token string) {
+	req.Header.Set("Authorization", token)
+	req.Header.Add("Content-Type", contentType)
+
+	resp, err := httpClient.Do(req)
+	FormatResLog(resp, err)
 }
 
-// PrettyHTTPResp - format http response
-func PrettyHTTPResp(resp *http.Response, err error) string {
+// FormatResLog - format http response
+func FormatResLog(resp *http.Response, err error) {
 	if err != nil {
-		return `{"error": "` + err.Error() + `"}`
+		fmt.Println(err.Error() + "\n")
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return `{"error": "` + err.Error() + `"}`
-	}
-
-	str := "Status code: " + strconv.Itoa(resp.StatusCode) + " - " +
-		http.StatusText(resp.StatusCode) + "\n\n"
+	log := color.YellowString(fmt.Sprintf("%s %s\n%s %v\n",
+		resp.Proto, resp.Status, "Content-Length: ", resp.ContentLength))
+	fmt.Println(log)
 
 	if len(resp.Header.Get("Location")) != 0 {
-		str = str + "Resource location: " + resp.Header.Get("Location")
+		log = fmt.Sprintf("%s %s", "Resource location:", resp.Header.Get("Location"))
+		fmt.Println(log, "\n")
+		return
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println(err.Error(), "\n")
+		return
 	}
 
 	if len(body) != 0 {
-		str = str + "\n" + PrettyJSON(string(body))
-	}
+		pj, err := prettyjson.Format([]byte(body))
+		if err != nil {
+			fmt.Println(string(body), "\n")
+			return
+		}
 
-	return str
+		fmt.Println(string(pj), "\n")
+	}
+}
+
+func LogUsage(u string) {
+	fmt.Println("Usage: ", u)
 }
